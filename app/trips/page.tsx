@@ -2,7 +2,7 @@ import Link from "next/link";
 import { supabase } from "@/lib/supabase";
 import type { Trip } from "@/lib/types";
 
-export const instant = false;
+export const instant = true;
 
 export default async function TripsPage() {
   const { data: trips, error } = await supabase
