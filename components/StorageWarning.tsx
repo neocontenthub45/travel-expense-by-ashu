@@ -15,7 +15,7 @@ export default function StorageWarning() {
         .not("receipt_url", "is", null);
       
       if (data) {
-        const sum = data.reduce((acc, curr) => acc + (Number(curr.file_size) || 0), 0);
+        const sum = data.reduce((acc: number, curr: { file_size: number | null }) => acc + (Number(curr.file_size) || 0), 0);
         setTotalSize(sum);
       }
     }

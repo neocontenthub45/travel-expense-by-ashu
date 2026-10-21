@@ -12,13 +12,13 @@ export default function UserNav() {
 
   useEffect(() => {
     // Check karo ki user logged in hai ya nahi
-    supabase.auth.getUser().then(({ data }) => {
+        supabase.auth.getUser().then(({ data }: { data: { user: any } }) => {
       setIsLoggedIn(!!data.user);
     });
 
     // Auth state change ko listen karo
     const { data: authListener } = supabase.auth.onAuthStateChange(
-      (event, session) => {
+      (event: any, session: any) => {
         setIsLoggedIn(!!session?.user);
       }
     );
