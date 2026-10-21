@@ -93,11 +93,24 @@ export default function TripsPage() {
                       {trip.country ? ` · ${trip.country}` : ""}{` · ${trip.currency}`}
                     </p>
                   </div>
-                  <span className={`shrink-0 text-[10px] uppercase font-bold px-2.5 py-1 rounded-lg ${
-                    trip.claim_status === "ongoing" ? "bg-indigo-50 text-indigo-700" :
-                    trip.claim_status === "closed" ? "bg-amber-50 text-amber-700" :
-                    "bg-emerald-50 text-emerald-700"
-                  }`}>{trip.claim_status}</span>
+                                    {(() => {
+                    let label = "Ongoing";
+                    let color = "bg-indigo-50 text-indigo-700";
+                    
+                    if (trip.claim_status === "closed") {
+                      label = "Claim Pending";
+                      color = "bg-amber-50 text-amber-700";
+                    } else if (trip.claim_status === "claimed") {
+                      label = "Claim Submitted"; // List view mein humein expenses ka data nahi pata, isliye generic rakha hai
+                      color = "bg-blue-50 text-blue-700";
+                    }
+
+                    return (
+                      <span className={`shrink-0 text-[10px] uppercase font-bold px-2.5 py-1 rounded-lg ${color}`}>
+                        {label}
+                      </span>
+                    );
+                  })()}
                 </div>
               </Link>
             ))}

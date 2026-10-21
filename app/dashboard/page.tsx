@@ -146,10 +146,24 @@ export default async function DashboardPage() {
                     <h3 className="font-bold text-slate-900" style={{ fontFamily: 'var(--font-display)' }}>{trip.trip_name}</h3>
                     <p className="text-xs text-slate-500 mt-1">{trip.start_date} · {trip.country || 'India'}</p>
                   </div>
-                  <span className={`text-[10px] uppercase font-bold px-2 py-1 rounded-md ${
-                    trip.claim_status === 'ongoing' ? 'bg-indigo-50 text-indigo-700' : 
-                    trip.claim_status === 'closed' ? 'bg-amber-50 text-amber-700' : 'bg-emerald-50 text-emerald-700'
-                  }`}>{trip.claim_status}</span>
+                                    {(() => {
+                    let label = "Ongoing";
+                    let color = "bg-indigo-50 text-indigo-700";
+                    
+                    if (trip.claim_status === "closed") {
+                      label = "Claim Pending";
+                      color = "bg-amber-50 text-amber-700";
+                    } else if (trip.claim_status === "claimed") {
+                      label = "Submitted"; // Ya Settled, agar hum expenses fetch karein toh
+                      color = "bg-blue-50 text-blue-700";
+                    }
+
+                    return (
+                      <span className={`text-[10px] uppercase font-bold px-2 py-1 rounded-md ${color}`}>
+                        {label}
+                      </span>
+                    );
+                  })()}
                 </div>
               </Link>
             ))}

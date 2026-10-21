@@ -102,13 +102,36 @@ export default function TripDetailPage({ params }: { params: Promise<{ id: strin
                   </Link>
                   <DeleteTripButton tripId={currentTrip.id} tripName={currentTrip.trip_name} />
                 </div>
-                <span className={`text-xs px-3 py-1.5 rounded-lg font-bold uppercase tracking-wider ${
-                  currentTrip.claim_status === "ongoing" ? "bg-indigo-100 text-indigo-700" :
-                  currentTrip.claim_status === "closed" ? "bg-amber-100 text-amber-700" :
-                  "bg-emerald-100 text-emerald-700"
-                }`}>
-                  {currentTrip.claim_status}
-                </span>
+                                {(() => {
+                  // Dinamically decide status label
+                  let label = "Ongoing";
+                  let color = "bg-indigo-100 text-indigo-700";
+                  
+                  if (currentTrip.claim_status === "closed") {
+                    label = "Trip Closed (Claim Pending)";
+                    color = "bg-amber-100 text-amber-700";
+                  } else if (currentTrip.claim_status === "claimed") {
+                    const isSettled = expenses.length > 0 && expenses.every(e => e.claim_status === "claimed");
+                    const isSubmitted = expenses.some(e => e.claim_status === "submitted");
+                    
+                    if (isSettled) {
+                      label = "Settled";
+                      color = "bg-emerald-100 text-emerald-700";
+                    } else if (isSubmitted) {
+                      label = "Claim Submitted";
+                      color = "bg-blue-100 text-blue-700";
+                    } else {
+                      label = "Claim Processing";
+                      color = "bg-blue-100 text-blue-700";
+                    }
+                  }
+
+                  return (
+                    <span className={`text-xs px-3 py-1.5 rounded-lg font-bold uppercase tracking-wider ${color}`}>
+                      {label}
+                    </span>
+                  );
+                })()}
               </div>
             </div>
           </div>
