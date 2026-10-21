@@ -3,31 +3,37 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Receipt, Plane, Loader2, Search } from "lucide-react";
-import BackButton from "@/components/BackButton";
 import { createClient } from "@/lib/supabase/client";
-import type { Trip } from "@/lib/types";
+import type { Trip, Expense } from "@/lib/types";
 import PageTransition from "@/components/PageTransition";
 import EmptyState from "@/components/EmptyState";
+import BackButton from "@/components/BackButton";
 
 export default function TripsPage() {
   const supabase = createClient();
   const [trips, setTrips] = useState<Trip[]>([]);
+  const [expenses, setExpenses] = useState<Expense[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [search, setSearch] = useState("");
 
   useEffect(() => {
-    async function fetchTrips() {
-      const { data, error } = await supabase
-        .from("trips")
-        .select("id, trip_name, start_date, end_date, country, currency, claim_status")
-        .order("start_date", { ascending: false });
+    async function fetchData() {
+      // Dono data ek saath fetch karo
+      const [tripsRes, expensesRes] = await Promise.all([
+        supabase.from("trips").select("*").order("start_date", { ascending: false }),
+        supabase.from("expenses").select("trip_id, claim_status")
+      ]);
 
-      if (error) setError(error.message);
-      else setTrips(data as Trip[]);
+      if (tripsRes.error || expensesRes.error) {
+        setError(tripsRes.error?.message || expensesRes.error?.message || "Error loading data");
+      } else {
+        setTrips(tripsRes.data as Trip[]);
+        setExpenses(expensesRes.data as Expense[]);
+      }
       setLoading(false);
     }
-    fetchTrips();
+    fetchData();
   }, []);
 
   // Filter trips based on search
@@ -42,7 +48,7 @@ export default function TripsPage() {
   return (
     <PageTransition>
       <div className="space-y-6">
-                <div>
+        <div>
           <BackButton label="Back to Dashboard" className="mb-4" />
         </div>
         
@@ -83,37 +89,49 @@ export default function TripsPage() {
           />
         ) : (
           <div className="space-y-3">
-            {filteredTrips.map((trip) => (
-              <Link key={trip.id} href={`/trips/${trip.id}`} className="block p-4 bg-white rounded-2xl border border-slate-200 hover:border-indigo-300 hover:shadow-md transition-all">
-                <div className="flex items-start justify-between gap-4">
-                  <div className="min-w-0">
-                    <h2 className="font-bold text-slate-900 truncate" style={{ fontFamily: 'var(--font-display)' }}>{trip.trip_name}</h2>
-                    <p className="text-sm text-slate-500 mt-1">
-                      {trip.start_date}{trip.end_date ? ` → ${trip.end_date}` : ""}
-                      {trip.country ? ` · ${trip.country}` : ""}{` · ${trip.currency}`}
-                    </p>
-                  </div>
-                                    {(() => {
-                    let label = "Ongoing";
-                    let color = "bg-indigo-50 text-indigo-700";
-                    
-                    if (trip.claim_status === "closed") {
-                      label = "Claim Pending";
-                      color = "bg-amber-50 text-amber-700";
-                    } else if (trip.claim_status === "claimed") {
-                      label = "Claim Submitted"; // List view mein humein expenses ka data nahi pata, isliye generic rakha hai
-                      color = "bg-blue-50 text-blue-700";
-                    }
+            {filteredTrips.map((trip) => {
+              // Logic to calculate status (Same as Trip Detail Page)
+              const tripExpenses = expenses.filter(e => e.trip_id === trip.id);
+              let label = "Ongoing";
+              let color = "bg-indigo-50 text-indigo-700";
+              
+              if (trip.claim_status === "closed") {
+                label = "Claim Pending";
+                color = "bg-amber-50 text-amber-700";
+              } else if (trip.claim_status === "claimed") {
+                const isSettled = tripExpenses.length > 0 && tripExpenses.every(e => e.claim_status === "claimed");
+                const isSubmitted = tripExpenses.some(e => e.claim_status === "submitted");
+                
+                if (isSettled) {
+                  label = "Settled";
+                  color = "bg-emerald-50 text-emerald-700";
+                } else if (isSubmitted) {
+                  label = "Claim Submitted";
+                  color = "bg-blue-50 text-blue-700";
+                } else {
+                  label = "Claim Processing";
+                  color = "bg-blue-50 text-blue-700";
+                }
+              }
 
-                    return (
-                      <span className={`shrink-0 text-[10px] uppercase font-bold px-2.5 py-1 rounded-lg ${color}`}>
-                        {label}
-                      </span>
-                    );
-                  })()}
-                </div>
-              </Link>
-            ))}
+              return (
+                <Link key={trip.id} href={`/trips/${trip.id}`} className="block p-4 bg-white rounded-2xl border border-slate-200 hover:border-indigo-300 hover:shadow-md transition-all">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="min-w-0">
+                      <h2 className="font-bold text-slate-900 truncate" style={{ fontFamily: 'var(--font-display)' }}>{trip.trip_name}</h2>
+                      <p className="text-[13px] text-slate-500 mt-1">
+                        {trip.start_date}{trip.end_date ? ` → ${trip.end_date}` : ""}
+                        {trip.country ? ` · ${trip.country}` : ""}{` · ${trip.currency}`}
+                      </p>
+                    </div>
+                    {/* Font size thoda chhota kiya taaki mobile pe fit ho sake */}
+                    <span className={`shrink-0 text-[9px] uppercase font-bold px-2 py-1 rounded-md ${color}`}>
+                      {label}
+                    </span>
+                  </div>
+                </Link>
+              );
+            })}
           </div>
         )}
       </div>
