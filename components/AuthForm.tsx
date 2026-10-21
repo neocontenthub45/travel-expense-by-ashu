@@ -51,9 +51,7 @@ export default function AuthForm({ mode }: { mode: "login" | "signup" }) {
   return (
     <div className="max-w-md mx-auto mt-12 bg-white p-8 rounded-2xl border border-slate-200 shadow-sm">
       <div className="flex flex-col items-center mb-8">
-        <div className="w-12 h-12 bg-indigo-600 text-white rounded-xl flex items-center justify-center mb-4 shadow-md shadow-indigo-200">
-          <Plane className="w-6 h-6" />
-        </div>
+        <img src="/logo-header.png" alt="Logo" className="w-14 h-14 object-contain mb-4" />
         <h1 className="text-2xl font-bold text-slate-900">
           {isLogin ? "Welcome back" : "Create an account"}
         </h1>

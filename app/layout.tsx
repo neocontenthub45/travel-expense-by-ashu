@@ -21,6 +21,13 @@ const body = DM_Sans({
 export const metadata: Metadata = {
   title: "Travel Expense Tracker",
   description: "Track trips, bills, and claims effortlessly.",
+  manifest: "/manifest.json",
+  themeColor: "#4F46E5",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "TravelExpense",
+  },
 };
 
 export default function RootLayout({
@@ -41,9 +48,7 @@ export default function RootLayout({
               className="flex items-center gap-2 font-bold hover:text-indigo-600 transition-colors"
               style={{ fontFamily: 'var(--font-display)' }}
             >
-              <span className="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-600 to-[#7B3FD6] text-white flex items-center justify-center shadow-sm">
-                <Plane className="w-4 h-4" fill="currentColor" />
-              </span>
+            <img src="/logo-header.png" alt="Logo" className="w-8 h-8 object-contain" />
               <span>Travel Expense</span>
             </Link>
             <div className="flex items-center text-sm">
