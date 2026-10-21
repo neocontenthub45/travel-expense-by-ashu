@@ -3,6 +3,7 @@ import { Bricolage_Grotesque, DM_Sans } from "next/font/google";
 import Link from "next/link";
 import { Plane } from "lucide-react";
 import ToastContainer from "@/components/Toast";
+import PWARegister from "@/components/PWARegister";
 import UserNav from "@/components/UserNav";
 import "./globals.css";
 
@@ -38,10 +39,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${body.variable} ${display.variable} antialiased bg-[#F8F6F0] min-h-screen text-[#17163F]`}
+        className={`${body.variable} ${display.variable} antialiased bg-slate-50 min-h-screen text-slate-900`}
         style={{ fontFamily: 'var(--font-body)' }}
       >
-        <nav className="sticky top-0 z-40 bg-[#F8F6F0]/90 backdrop-blur-md border-b border-slate-200/50">
+        <nav className="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-slate-200/50">
           <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
             <Link
               href="/"
@@ -58,7 +59,9 @@ export default function RootLayout({
         </nav>
 
         <main className="max-w-5xl mx-auto px-4 py-6">{children}</main>
-        <ToastContainer />
+        // ... body ke andar
+<ToastContainer />
+<PWARegister />
       </body>
     </html>
   );
