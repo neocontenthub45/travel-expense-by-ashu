@@ -30,11 +30,6 @@ export default async function DashboardPage() {
       <div className="space-y-6">
         
         {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div>
-            <h1 className="text-2xl font-bold" style={{ fontFamily: 'var(--font-display)' }}>Dashboard</h1>
-            <p className="text-slate-500 text-sm mt-1">Welcome back! Here is your overview.</p>
-          </div>
           <div className="flex items-center gap-1.5 sm:gap-2">
             <Link href="/dashboard/expenses/new" className="flex items-center justify-center gap-1 px-2.5 py-2 rounded-xl bg-gradient-to-br from-indigo-600 to-[#7B3FD6] text-white text-[13px] sm:text-sm font-semibold shadow-md hover:-translate-y-0.5 transition-all flex-1 sm:flex-none">
               <Plus className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> Expense
