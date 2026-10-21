@@ -35,15 +35,15 @@ export default async function DashboardPage() {
             <h1 className="text-2xl font-bold" style={{ fontFamily: 'var(--font-display)' }}>Dashboard</h1>
             <p className="text-slate-500 text-sm mt-1">Welcome back! Here is your overview.</p>
           </div>
-          <div className="flex gap-2 flex-wrap">
-            <Link href="/dashboard/expenses/new" className="flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-br from-indigo-600 to-[#7B3FD6] text-white text-sm font-semibold shadow-md hover:-translate-y-0.5 transition-all">
-              <Plus className="w-4 h-4" /> Quick Expense
+          <div className="flex items-center gap-1.5 sm:gap-2">
+            <Link href="/dashboard/expenses/new" className="flex items-center justify-center gap-1 px-2.5 py-2 rounded-xl bg-gradient-to-br from-indigo-600 to-[#7B3FD6] text-white text-[13px] sm:text-sm font-semibold shadow-md hover:-translate-y-0.5 transition-all flex-1 sm:flex-none">
+              <Plus className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> Expense
             </Link>
-            <Link href="/trips/new" className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white border border-slate-200 text-slate-700 text-sm font-semibold hover:bg-slate-50 shadow-sm transition-all">
+            <Link href="/trips/new" className="flex items-center justify-center gap-1 px-2.5 py-2 rounded-xl bg-white border border-slate-200 text-slate-700 text-[13px] sm:text-sm font-semibold hover:bg-slate-50 shadow-sm transition-all flex-1 sm:flex-none">
               New Trip
             </Link>
-            <Link href="/trips" className="flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-900 text-white text-sm font-semibold shadow-md hover:-translate-y-0.5 transition-all">
-              <FolderOpen className="w-4 h-4" /> My Trips
+            <Link href="/trips" className="flex items-center justify-center gap-1 px-2.5 py-2 rounded-xl bg-slate-900 text-white text-[13px] sm:text-sm font-semibold shadow-md hover:-translate-y-0.5 transition-all flex-1 sm:flex-none">
+              <FolderOpen className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> My Trips
             </Link>
           </div>
         </div>
