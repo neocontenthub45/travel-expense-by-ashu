@@ -1,24 +1,24 @@
-const CACHE_NAME = 'travel-expense-v3';
+const CACHE_NAME = 'travel-expense-v1';
+const ASSETS = ['/', '/manifest.json', '/icon-192x192.png', '/icon-512x512.png'];
 
-self.addEventListener('install', (event) => {
+// Install — files cache karo
+self.addEventListener('install', e => {
+  e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll(ASSETS)));
   self.skipWaiting();
 });
 
-self.addEventListener('activate', (event) => {
-  event.waitUntil(clients.claim());
+// Activate — purana cache delete
+self.addEventListener('activate', e => {
+  e.waitUntil(caches.keys().then(keys =>
+    Promise.all(keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k)))
+  ));
+  self.clients.claim();
 });
 
-// Chrome Android ko install prompt ke liye ek valid fetch handler chahiye
-self.addEventListener('fetch', (event) => {
-  // Sirf GET requests handle karo
-  if (event.request.method !== 'GET') {
-    return;
-  }
-
-  event.respondWith(
-    fetch(event.request).catch(() => {
-      // Offline hone par cache se serve karo
-      return caches.match(event.request);
-    })
-  );
+// Fetch — cache se serve karo, Supabase API ko skip karo
+self.addEventListener('fetch', e => {
+  if (e.request.url.includes('supabase.co')) return; // API cache nahi
+  e.respondWith(caches.match(e.request).then(cached =>
+    cached || fetch(e.request)
+  ));
 });

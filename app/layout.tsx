@@ -22,7 +22,7 @@ const body = DM_Sans({
 export const metadata: Metadata = {
   title: "Travel Expense Tracker",
   description: "Track trips, bills, and claims effortlessly.",
-  manifest: "/manifest.json",
+  manifest: "/manifest.webmanifest",
   themeColor: "#4F46E5",
   appleWebApp: {
     capable: true,
