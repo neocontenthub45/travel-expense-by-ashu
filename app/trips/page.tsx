@@ -1,29 +1,51 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Receipt, Plane } from "lucide-react";
-import { createClient } from "@/lib/supabase/server";
+import { Receipt, Plane, Loader2 } from "lucide-react";
+import { createClient } from "@/lib/supabase/client";
 import type { Trip } from "@/lib/types";
 import PageTransition from "@/components/PageTransition";
 import EmptyState from "@/components/EmptyState";
 
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
+export default function TripsPage() {
+  const supabase = createClient();
+  const [trips, setTrips] = useState<Trip[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-export default async function TripsPage() {
-  const supabase = await createClient();
-  const { data: trips, error } = await supabase
-    .from("trips")
-    .select("*")
-    .order("start_date", { ascending: false });
+  useEffect(() => {
+    async function fetchTrips() {
+      const { data, error } = await supabase
+        .from("trips")
+        .select("id, trip_name, start_date, end_date, country, currency, claim_status")
+        .order("start_date", { ascending: false });
 
-  if (error) {
+      if (error) {
+        setError(error.message);
+      } else {
+        setTrips(data as Trip[]);
+      }
+      setLoading(false);
+    }
+    fetchTrips();
+  }, []);
+
+  if (loading) {
     return (
-      <div className="p-4 bg-rose-50 border border-rose-200 rounded-lg text-rose-800 text-sm">
-        Failed to load trips: {error.message}
+      <div className="flex items-center justify-center py-20">
+        <Loader2 className="w-6 h-6 animate-spin text-indigo-600" />
       </div>
     );
   }
 
-  const list = (trips as Trip[]) || [];
+  if (error) {
+    return (
+      <div className="p-4 bg-rose-50 border border-rose-200 rounded-lg text-rose-800 text-sm">
+        Failed to load trips: {error}
+      </div>
+    );
+  }
 
   return (
     <PageTransition>
@@ -32,7 +54,7 @@ export default async function TripsPage() {
           <div>
             <h1 className="text-2xl font-bold text-slate-900">My Trips</h1>
             <p className="text-sm text-slate-600 mt-1">
-              {list.length} {list.length === 1 ? "trip" : "trips"} recorded
+              {trips.length} {trips.length === 1 ? "trip" : "trips"} recorded
             </p>
           </div>
           <Link
@@ -43,7 +65,7 @@ export default async function TripsPage() {
           </Link>
         </div>
 
-        {list.length === 0 ? (
+        {trips.length === 0 ? (
           <EmptyState
             icon={<Plane className="w-6 h-6" />}
             title="No trips yet"
@@ -60,7 +82,7 @@ export default async function TripsPage() {
           />
         ) : (
           <div className="space-y-3">
-            {list.map((trip) => (
+            {trips.map((trip) => (
               <Link
                 key={trip.id}
                 href={`/trips/${trip.id}`}

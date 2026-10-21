@@ -7,12 +7,14 @@ import { uploadReceipt } from "@/lib/storage";
 import type { Trip } from "@/lib/types";
 import { Loader2, Camera, Paperclip } from "lucide-react";
 import { showToast } from "@/lib/toast";
+import { useState, useRef } from "react";
 
 const CATEGORIES = ["Food", "Taxi", "Hotel", "Flight", "Train", "Bus", "Fuel", "Shopping", "Other"];
 
 export default function ExpenseForm({ trip }: { trip: Trip }) {
   const router = useRouter();
   const supabase = createClient();
+  const formRef = useRef<HTMLFormElement>(null);
   
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -31,8 +33,8 @@ export default function ExpenseForm({ trip }: { trip: Trip }) {
       if (!user) throw new Error("You must be logged in");
 
       // Form element ko properly capture karo
-      const formElement = e.currentTarget;
-      const formData = new FormData(formElement);
+      if (!formRef.current) throw new Error("Form not found");
+      const formData = new FormData(formRef.current);
 
       let receiptPath: string | null = null;
       let fileSize = 0;
@@ -80,7 +82,7 @@ export default function ExpenseForm({ trip }: { trip: Trip }) {
       <h1 className="text-2xl font-bold text-slate-900 mb-1">Add Expense</h1>
       <p className="text-sm text-slate-600 mb-6">{trip.trip_name} · {trip.currency}</p>
 
-      <form onSubmit={handleSubmit} className="space-y-4 bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+        <form ref={formRef} onSubmit={handleSubmit} className="space-y-4 bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
         <div className="grid grid-cols-2 gap-4">
           <div>
             <label className="block text-sm font-medium text-slate-700 mb-1">Amount *</label>
