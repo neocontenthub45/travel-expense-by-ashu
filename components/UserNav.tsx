@@ -21,9 +21,9 @@ export default function UserNav() {
         Welcome
       </span>
       <button
-        onClick={handleLogout}
-        className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-colors"
-      >
+  onClick={handleLogout}
+  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm text-rose-600 hover:bg-rose-50 hover:text-rose-700 transition-colors"
+>
         <LogOut className="w-4 h-4" />
         <span className="hidden sm:inline">Logout</span>
       </button>

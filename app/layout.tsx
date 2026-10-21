@@ -42,21 +42,9 @@ export default function RootLayout({
               </span>
               <span>Travel Expense</span>
             </Link>
-            <div className="flex items-center gap-2 text-sm">
-              <Link
-                href="/trips"
-                className="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors"
-              >
-                Trips
-              </Link>
-              <Link
-                href="/trips/new"
-                className="px-3 py-1.5 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 transition-colors shadow-sm"
-              >
-                + New Trip
-              </Link>
-              <UserNav />
-            </div>
+            <div className="flex items-center text-sm">
+  <UserNav />
+</div>
           </div>
         </nav>
 
