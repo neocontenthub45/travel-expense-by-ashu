@@ -1,7 +1,7 @@
 import { supabase } from "./supabase";
 import imageCompression from "browser-image-compression";
 
-export async function uploadReceipt(file: File, tripId: string) {
+export async function uploadReceipt(file: File, tripId: string, userId: string) {
   let uploadFile: File | Blob = file;
 
   if (file.type.startsWith("image/")) {
@@ -15,7 +15,9 @@ export async function uploadReceipt(file: File, tripId: string) {
   const ext =
     file.name.split(".").pop() ||
     (file.type === "application/pdf" ? "pdf" : "jpg");
-  const path = `${tripId}/${Date.now()}-${Math.random()
+    
+  // Folder structure: userId/tripId/timestamp-random.ext
+  const path = `${userId}/${tripId}/${Date.now()}-${Math.random()
     .toString(36)
     .slice(2, 8)}.${ext}`;
 

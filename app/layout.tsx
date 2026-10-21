@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import Link from "next/link";
 import { Plane } from "lucide-react";
 import ToastContainer from "@/components/Toast";
+import UserNav from "@/components/UserNav";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -54,6 +55,7 @@ export default function RootLayout({
               >
                 + New Trip
               </Link>
+              <UserNav />
             </div>
           </div>
         </nav>
