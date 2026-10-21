@@ -36,7 +36,7 @@ export default function DeleteTripButton({ tripId, tripName }: { tripId: string,
       if (error) throw error;
 
       showToast("Trip deleted successfully", "success");
-      router.push("/trips");
+      router.push("/dashboard");
       router.refresh();
     } catch (err: any) {
       showToast(err.message, "error");
