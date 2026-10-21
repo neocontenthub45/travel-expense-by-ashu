@@ -2,6 +2,7 @@
 
 import { useEffect, useState, use } from "react";
 import Link from "next/link";
+import { notFound } from "next/navigation"; // NOTFOUND IMPORT
 import { createClient } from "@/lib/supabase/client";
 import type { Trip, Expense } from "@/lib/types";
 import ViewBillButton from "@/components/ViewBillButton";
@@ -41,6 +42,7 @@ export default function TripDetailPage({ params }: { params: Promise<{ id: strin
     fetchData();
   }, [id]);
 
+  // Loading State
   if (loading) {
     return (
       <div className="max-w-5xl mx-auto space-y-6 animate-pulse">
@@ -58,18 +60,16 @@ export default function TripDetailPage({ params }: { params: Promise<{ id: strin
           <div className="h-24 bg-slate-200 rounded-2xl" />
         </div>
         <div className="h-16 bg-slate-200 rounded-xl" />
-        <div className="space-y-3">
-          <div className="h-24 bg-slate-200 rounded-xl" />
-          <div className="h-24 bg-slate-200 rounded-xl" />
-        </div>
       </div>
     );
   }
 
+  // Not Found State
   if (error || !trip) {
-    notFound(); // Yeh Next.js ke not-found.tsx page pe bhej dega
+    return notFound();
   }
 
+  const currentTrip = trip as Trip;
   const total = expenses.reduce((s, e) => s + Number(e.amount), 0);
   const pendingTotal = expenses.filter((e) => e.claim_status === "pending" || e.claim_status === "submitted").reduce((s, e) => s + Number(e.amount), 0);
 
@@ -84,30 +84,30 @@ export default function TripDetailPage({ params }: { params: Promise<{ id: strin
           <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm relative overflow-hidden mt-3">
             <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
               <div>
-                <h1 className="text-2xl font-bold text-slate-900" style={{ fontFamily: 'var(--font-display)' }}>{trip.trip_name}</h1>
+                <h1 className="text-2xl font-bold text-slate-900" style={{ fontFamily: 'var(--font-display)' }}>{currentTrip.trip_name}</h1>
                 <p className="text-sm font-medium text-slate-500 mt-2 flex items-center gap-2">
-                  <span className="bg-slate-200 text-slate-700 px-2 py-0.5 rounded text-xs">{trip.start_date}</span>
-                  {trip.end_date && <><span className="text-slate-400">→</span> <span className="bg-slate-200 text-slate-700 px-2 py-0.5 rounded text-xs">{trip.end_date}</span></>}
-                  {trip.country && <span className="bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded text-xs">{trip.country}</span>}
-                  <span className="bg-slate-200 text-slate-700 px-2 py-0.5 rounded text-xs">{trip.currency}</span>
+                  <span className="bg-slate-200 text-slate-700 px-2 py-0.5 rounded text-xs">{currentTrip.start_date}</span>
+                  {currentTrip.end_date && <><span className="text-slate-400">→</span> <span className="bg-slate-200 text-slate-700 px-2 py-0.5 rounded text-xs">{currentTrip.end_date}</span></>}
+                  {currentTrip.country && <span className="bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded text-xs">{currentTrip.country}</span>}
+                  <span className="bg-slate-200 text-slate-700 px-2 py-0.5 rounded text-xs">{currentTrip.currency}</span>
                 </p>
               </div>
               <div className="flex flex-col items-end gap-2">
                 <div className="flex items-center gap-2">
                   <Link
-                    href={`/trips/${trip.id}/edit`}
+                    href={`/trips/${currentTrip.id}/edit`}
                     className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-semibold text-slate-700 bg-white border border-slate-200 hover:bg-slate-50 transition-colors shadow-sm"
                   >
                     <Edit3 className="w-4 h-4" /> Edit
                   </Link>
-                  <DeleteTripButton tripId={trip.id} tripName={trip.trip_name} />
+                  <DeleteTripButton tripId={currentTrip.id} tripName={currentTrip.trip_name} />
                 </div>
                 <span className={`text-xs px-3 py-1.5 rounded-lg font-bold uppercase tracking-wider ${
-                  trip.claim_status === "ongoing" ? "bg-indigo-100 text-indigo-700" :
-                  trip.claim_status === "closed" ? "bg-amber-100 text-amber-700" :
+                  currentTrip.claim_status === "ongoing" ? "bg-indigo-100 text-indigo-700" :
+                  currentTrip.claim_status === "closed" ? "bg-amber-100 text-amber-700" :
                   "bg-emerald-100 text-emerald-700"
                 }`}>
-                  {trip.claim_status}
+                  {currentTrip.claim_status}
                 </span>
               </div>
             </div>
@@ -118,13 +118,13 @@ export default function TripDetailPage({ params }: { params: Promise<{ id: strin
           <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
             <p className="text-xs text-slate-500 font-medium">Total Spent</p>
             <p className="text-xl font-bold text-slate-900 mt-1" style={{ fontFamily: 'var(--font-display)' }}>
-              {trip.currency} {total.toFixed(2)}
+              {currentTrip.currency} {total.toFixed(2)}
             </p>
           </div>
           <div className="bg-amber-50 p-4 rounded-xl border border-amber-200 shadow-sm">
             <p className="text-xs text-amber-700 font-medium">Pending Amount</p>
             <p className="text-xl font-bold text-amber-900 mt-1" style={{ fontFamily: 'var(--font-display)' }}>
-              {trip.currency} {pendingTotal.toFixed(2)}
+              {currentTrip.currency} {pendingTotal.toFixed(2)}
             </p>
           </div>
           <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
@@ -133,13 +133,13 @@ export default function TripDetailPage({ params }: { params: Promise<{ id: strin
           </div>
         </div>
 
-        <ClaimExportSection trip={trip} expenses={expenses} />
+        <ClaimExportSection trip={currentTrip} expenses={expenses} />
 
         <div className="flex items-center justify-between mt-6 border-b border-slate-200 pb-2">
           <h2 className="text-lg font-bold text-slate-900" style={{ fontFamily: 'var(--font-display)' }}>Expense List</h2>
-          {trip.claim_status === "ongoing" && (
+          {currentTrip.claim_status === "ongoing" && (
             <Link
-              href={`/trips/${trip.id}/expenses/new`}
+              href={`/trips/${currentTrip.id}/expenses/new`}
               className="bg-gradient-to-br from-indigo-600 to-[#7B3FD6] text-white px-4 py-2 rounded-xl text-sm font-semibold hover:-translate-y-0.5 shadow-md transition-all"
             >
               + Add Expense
@@ -189,7 +189,7 @@ export default function TripDetailPage({ params }: { params: Promise<{ id: strin
                     <p className="font-bold text-slate-900 whitespace-nowrap text-lg" style={{ fontFamily: 'var(--font-display)' }}>
                       {e.currency} {Number(e.amount).toFixed(2)}
                     </p>
-                    <ExpenseActions expenseId={e.id} tripId={trip.id} receiptUrl={e.receipt_url} />
+                    <ExpenseActions expenseId={e.id} tripId={currentTrip.id} receiptUrl={e.receipt_url} />
                   </div>
                 </div>
               </div>
