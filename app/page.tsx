@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Plane, Plus, Receipt, Wallet } from "lucide-react";
+import { Plane, Plus, Receipt, Wallet, BarChart3 } from "lucide-react";
 import PageTransition from "@/components/PageTransition";
 import StorageWarning from "@/components/StorageWarning";
 
@@ -31,6 +31,21 @@ export default function Home() {
             </div>
             <p className="mt-3 text-sm text-slate-600">
               View all trips, track expenses, and manage claims.
+            </p>
+          </Link>
+
+                    <Link
+            href="/dashboard"
+            className="group block p-6 bg-white rounded-xl border border-slate-200 hover:border-indigo-300 hover:shadow-md transition-all"
+          >
+            <div className="flex items-center gap-3">
+              <span className="w-10 h-10 rounded-lg bg-slate-100 text-slate-700 flex items-center justify-center group-hover:bg-slate-200 transition-colors">
+                <BarChart3 className="w-5 h-5" />
+              </span>
+              <h2 className="font-semibold text-slate-900">Financial Overview</h2>
+            </div>
+            <p className="mt-3 text-sm text-slate-600">
+              View total spending, pending claims, and export your data.
             </p>
           </Link>
 
