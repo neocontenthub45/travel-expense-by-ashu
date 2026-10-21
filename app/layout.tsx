@@ -1,19 +1,21 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Bricolage_Grotesque, DM_Sans } from "next/font/google";
 import Link from "next/link";
 import { Plane } from "lucide-react";
 import ToastContainer from "@/components/Toast";
 import UserNav from "@/components/UserNav";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
+const display = Bricolage_Grotesque({ 
+  subsets: ["latin"], 
+  weight: ["700", "800"],
+  variable: "--font-display"
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+const body = DM_Sans({ 
+  subsets: ["latin"], 
+  weight: ["400", "500", "700"],
+  variable: "--font-body"
 });
 
 export const metadata: Metadata = {
@@ -29,26 +31,28 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-slate-50 min-h-screen text-slate-900`}
+        className={`${body.variable} ${display.variable} antialiased bg-[#F8F6F0] min-h-screen text-[#17163F]`}
+        style={{ fontFamily: 'var(--font-body)' }}
       >
-        <nav className="sticky top-0 z-40 bg-white/80 backdrop-blur border-b border-slate-200">
+        <nav className="sticky top-0 z-40 bg-[#F8F6F0]/90 backdrop-blur-md border-b border-slate-200/50">
           <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
             <Link
               href="/"
-              className="flex items-center gap-2 font-semibold text-slate-900 hover:text-indigo-600 transition-colors"
+              className="flex items-center gap-2 font-bold hover:text-indigo-600 transition-colors"
+              style={{ fontFamily: 'var(--font-display)' }}
             >
-              <span className="w-8 h-8 rounded-lg bg-indigo-600 text-white flex items-center justify-center">
-                <Plane className="w-4 h-4" />
+              <span className="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-600 to-[#7B3FD6] text-white flex items-center justify-center shadow-sm">
+                <Plane className="w-4 h-4" fill="currentColor" />
               </span>
               <span>Travel Expense</span>
             </Link>
             <div className="flex items-center text-sm">
-  <UserNav />
-</div>
+              <UserNav />
+            </div>
           </div>
         </nav>
 
-        <main className="max-w-5xl mx-auto px-4 py-8">{children}</main>
+        <main className="max-w-5xl mx-auto px-4 py-6">{children}</main>
         <ToastContainer />
       </body>
     </html>

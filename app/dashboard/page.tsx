@@ -21,88 +21,98 @@ export default async function DashboardPage() {
   const totalSpent = e.reduce((acc, curr) => acc + Number(curr.amount), 0);
   const totalClaimed = e.filter(exp => exp.claim_status === "claimed").reduce((acc, curr) => acc + Number(curr.amount), 0);
   
-  // Trips pending for claim submission (status closed)
   const tripsPendingSubmission = t.filter(trip => trip.claim_status === "closed");
   const pendingSubmissionAmount = e.filter(exp => tripsPendingSubmission.some(trip => trip.id === exp.trip_id)).reduce((acc, curr) => acc + Number(curr.amount), 0);
-  
-  // Claim submitted, settlement pending (expenses with status submitted)
   const submittedPendingAmount = e.filter(exp => exp.claim_status === "submitted").reduce((acc, curr) => acc + Number(curr.amount), 0);
 
   return (
     <PageTransition>
       <div className="space-y-6">
-        {/* Header with Buttons */}
+        
+        {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-bold text-slate-900">Dashboard</h1>
-            <p className="text-slate-600 text-sm mt-1">Welcome back! Here is your overview.</p>
+            <h1 className="text-2xl font-bold" style={{ fontFamily: 'var(--font-display)' }}>Dashboard</h1>
+            <p className="text-slate-500 text-sm mt-1">Welcome back! Here is your overview.</p>
           </div>
-          <div className="flex gap-2">
-            <Link href="/dashboard/expenses/new" className="flex items-center gap-2 px-4 py-2 rounded-lg bg-indigo-600 text-white text-sm font-medium hover:bg-indigo-700 shadow-sm">
+          <div className="flex gap-2 flex-wrap">
+            <Link href="/dashboard/expenses/new" className="flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-br from-indigo-600 to-[#7B3FD6] text-white text-sm font-semibold shadow-md hover:-translate-y-0.5 transition-all">
               <Plus className="w-4 h-4" /> Quick Expense
             </Link>
-            <Link href="/trips/new" className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white border border-slate-300 text-slate-700 text-sm font-medium hover:bg-slate-50">
+            <Link href="/trips/new" className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white border border-slate-200 text-slate-700 text-sm font-semibold hover:bg-slate-50 shadow-sm transition-all">
               New Trip
             </Link>
-            <Link href="/trips" className="flex items-center gap-2 px-4 py-2 rounded-lg bg-slate-900 text-white text-sm font-medium hover:bg-slate-800">
+            <Link href="/trips" className="flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-900 text-white text-sm font-semibold shadow-md hover:-translate-y-0.5 transition-all">
               <FolderOpen className="w-4 h-4" /> My Trips
             </Link>
           </div>
         </div>
 
-        {/* Storage Bar */}
         <StorageBar expenses={e} />
 
-        {/* Cards - 2 Column Layout */}
+        {/* Cards - 2 Column */}
         <div className="grid grid-cols-2 gap-3">
-          <Link href="/trips" className="block p-4 bg-white rounded-xl border hover:border-indigo-300 transition-all">
-            <p className="text-xs font-medium text-slate-500">Total Trips</p>
-            <p className="text-xl font-bold text-slate-900 mt-1">{totalTrips}</p>
+          <Link href="/trips" className="block p-4 bg-white rounded-2xl border border-slate-200 shadow-sm hover:border-indigo-300 hover:shadow-md transition-all">
+            <div className="flex items-center gap-2 text-slate-500 mb-1">
+              <Plane className="w-4 h-4" /> <p className="text-xs font-medium">Total Trips</p>
+            </div>
+            <p className="text-2xl font-bold text-slate-900" style={{ fontFamily: 'var(--font-display)' }}>{totalTrips}</p>
           </Link>
-          <Link href="/trips?filter=ongoing" className="block p-4 bg-white rounded-xl border hover:border-indigo-300 transition-all">
-            <p className="text-xs font-medium text-slate-500">Active Trips</p>
-            <p className="text-xl font-bold text-emerald-600 mt-1">{activeTrips}</p>
+          
+          <Link href="/trips?filter=ongoing" className="block p-4 bg-white rounded-2xl border border-slate-200 shadow-sm hover:border-indigo-300 hover:shadow-md transition-all">
+            <div className="flex items-center gap-2 text-emerald-600 mb-1">
+              <Clock className="w-4 h-4" /> <p className="text-xs font-medium">Active Trips</p>
+            </div>
+            <p className="text-2xl font-bold text-emerald-600" style={{ fontFamily: 'var(--font-display)' }}>{activeTrips}</p>
           </Link>
-          <Link href="/dashboard" className="block p-4 bg-white rounded-xl border hover:border-indigo-300 transition-all">
-            <p className="text-xs font-medium text-slate-500">Total Spent</p>
-            <p className="text-xl font-bold text-slate-900 mt-1">₹{totalSpent.toFixed(2)}</p>
+
+          <Link href="/dashboard" className="block p-4 bg-white rounded-2xl border border-slate-200 shadow-sm hover:border-indigo-300 hover:shadow-md transition-all">
+            <div className="flex items-center gap-2 text-slate-500 mb-1">
+              <Receipt className="w-4 h-4" /> <p className="text-xs font-medium">Total Spent</p>
+            </div>
+            <p className="text-2xl font-bold text-slate-900" style={{ fontFamily: 'var(--font-display)' }}>₹{totalSpent.toFixed(2)}</p>
           </Link>
-          <Link href="/dashboard" className="block p-4 bg-white rounded-xl border hover:border-indigo-300 transition-all">
-            <p className="text-xs font-medium text-slate-500">Claimed / Settled</p>
-            <p className="text-xl font-bold text-emerald-600 mt-1">₹{totalClaimed.toFixed(2)}</p>
+
+          <Link href="/dashboard" className="block p-4 bg-white rounded-2xl border border-slate-200 shadow-sm hover:border-indigo-300 hover:shadow-md transition-all">
+            <div className="flex items-center gap-2 text-emerald-600 mb-1">
+              <CheckCircle2 className="w-4 h-4" /> <p className="text-xs font-medium">Claimed</p>
+            </div>
+            <p className="text-2xl font-bold text-emerald-600" style={{ fontFamily: 'var(--font-display)' }}>₹{totalClaimed.toFixed(2)}</p>
           </Link>
         </div>
 
-        {/* Full Width Cards */}
-        <Link href="/trips?filter=pending_submission" className="block p-4 bg-amber-50 rounded-xl border border-amber-200 hover:border-amber-300 transition-all">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-xs font-medium text-amber-700">No. of trips pending for claim submission</p>
-              <p className="text-xl font-bold text-amber-900 mt-1">{tripsPendingSubmission.length}</p>
+        {/* Full Width Cards (Ticket Style) */}
+        <div className="space-y-3">
+          <Link href="/trips?filter=pending_submission" className="block p-4 bg-[#FFFBF4] border-2 border-dashed border-amber-200 rounded-2xl hover:border-amber-400 transition-all">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-xs font-semibold text-amber-700 uppercase tracking-wider">Trips pending claim submission</p>
+                <p className="text-xl font-bold text-amber-900 mt-1" style={{ fontFamily: 'var(--font-display)' }}>{tripsPendingSubmission.length}</p>
+              </div>
+              <ArrowRight className="w-5 h-5 text-amber-500" />
             </div>
-            <ArrowRight className="w-4 h-4 text-amber-600" />
-          </div>
-        </Link>
+          </Link>
 
-        <Link href="/trips?filter=pending_submission" className="block p-4 bg-amber-50 rounded-xl border border-amber-200 hover:border-amber-300 transition-all">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-xs font-medium text-amber-700">Spent pending for claim submission</p>
-              <p className="text-xl font-bold text-amber-900 mt-1">₹{pendingSubmissionAmount.toFixed(2)}</p>
+          <Link href="/trips?filter=pending_submission" className="block p-4 bg-[#FFFBF4] border-2 border-dashed border-amber-200 rounded-2xl hover:border-amber-400 transition-all">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-xs font-semibold text-amber-700 uppercase tracking-wider">Spent pending for submission</p>
+                <p className="text-xl font-bold text-amber-900 mt-1" style={{ fontFamily: 'var(--font-display)' }}>₹{pendingSubmissionAmount.toFixed(2)}</p>
+              </div>
+              <ArrowRight className="w-5 h-5 text-amber-500" />
             </div>
-            <ArrowRight className="w-4 h-4 text-amber-600" />
-          </div>
-        </Link>
+          </Link>
 
-        <Link href="/trips?filter=submitted" className="block p-4 bg-rose-50 rounded-xl border border-rose-200 hover:border-rose-300 transition-all">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-xs font-medium text-rose-700">Claim submitted, Settlement pending</p>
-              <p className="text-xl font-bold text-rose-900 mt-1">₹{submittedPendingAmount.toFixed(2)}</p>
+          <Link href="/trips?filter=submitted" className="block p-4 bg-[#FFFBF4] border-2 border-dashed border-rose-200 rounded-2xl hover:border-rose-400 transition-all">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-xs font-semibold text-rose-700 uppercase tracking-wider">Submitted, Settlement pending</p>
+                <p className="text-xl font-bold text-rose-900 mt-1" style={{ fontFamily: 'var(--font-display)' }}>₹{submittedPendingAmount.toFixed(2)}</p>
+              </div>
+              <ArrowRight className="w-5 h-5 text-rose-500" />
             </div>
-            <ArrowRight className="w-4 h-4 text-rose-600" />
-          </div>
-        </Link>
+          </Link>
+        </div>
 
         <GlobalExportButton />
       </div>
