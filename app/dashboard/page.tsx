@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
-import { Plane, Receipt, CheckCircle2, Clock, ArrowRight, FolderOpen, Plus, Lock } from "lucide-react";
+import { Plane, Receipt, CheckCircle2, Clock, ArrowRight, FolderOpen, Plus, AlertCircle } from "lucide-react";
 import PageTransition from "@/components/PageTransition";
 import GlobalExportButton from "@/components/Dashboard/GlobalExportButton";
 import StorageBar from "@/components/Dashboard/StorageBar";
@@ -11,7 +11,6 @@ export default async function DashboardPage() {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   
-  // Profile fetch
   let userName = "there";
   if (user) {
     const { data: profile } = await supabase.from("profiles").select("full_name").eq("id", user.id).single();
@@ -33,8 +32,10 @@ export default async function DashboardPage() {
   const pendingSubmissionAmount = e.filter(exp => tripsPendingSubmission.some(trip => trip.id === exp.trip_id)).reduce((acc, curr) => acc + Number(curr.amount), 0);
   const submittedPendingAmount = e.filter(exp => exp.claim_status === "submitted").reduce((acc, curr) => acc + Number(curr.amount), 0);
 
-  // NAYA: Ongoing trips ka total expense calculate karo
   const ongoingTripExpenses = e.filter(exp => activeTrips.some(trip => trip.id === exp.trip_id)).reduce((acc, curr) => acc + Number(curr.amount), 0);
+
+  // NAYA: Check karo ki kya kuch action pending hai
+  const hasActionPending = activeTrips.length > 0 || tripsPendingSubmission.length > 0 || submittedPendingAmount > 0;
 
   return (
     <PageTransition>
@@ -90,51 +91,44 @@ export default async function DashboardPage() {
           </Link>
         </div>
 
-        {/* NAYA CARD: Ongoing Trips Warning */}
-        {activeTrips.length > 0 && (
-          <Link href="/trips?filter=ongoing" className="block p-4 bg-indigo-50 border-2 border-dashed border-indigo-200 rounded-2xl hover:border-indigo-400 transition-all">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-xs font-semibold text-indigo-700 uppercase tracking-wider">Ongoing Trips (Don't forget to close)</p>
-                <div className="flex items-center gap-4 mt-1">
-                  <p className="text-xl font-bold text-indigo-900" style={{ fontFamily: 'var(--font-display)' }}>{activeTrips.length} Trips</p>
-                  <p className="text-lg font-bold text-indigo-800" style={{ fontFamily: 'var(--font-display)' }}>₹{ongoingTripExpenses.toFixed(2)} Spent</p>
+        {/* NAYA COMBINED ACTION CARD */}
+        {hasActionPending && (
+          <Link href="/trips?filter=action_required" className="block p-5 bg-amber-50 border-2 border-dashed border-amber-200 rounded-2xl hover:border-amber-400 hover:shadow-md transition-all group">
+            <div className="flex items-start justify-between">
+              <div className="w-full">
+                <div className="flex items-center gap-2 mb-3">
+                  <AlertCircle className="w-5 h-5 text-amber-600" />
+                  <p className="text-sm font-bold text-amber-900 uppercase tracking-wider" style={{ fontFamily: 'var(--font-display)' }}>Action Required</p>
                 </div>
+                
+                <div className="grid grid-cols-2 gap-4">
+                  {/* Left: Ongoing Trips */}
+                  <div>
+                    <p className="text-xs font-semibold text-amber-700 mb-1">Ongoing Trips (Close now)</p>
+                    <p className="text-lg font-bold text-amber-900" style={{ fontFamily: 'var(--font-display)' }}>{activeTrips.length} Trips</p>
+                    <p className="text-sm text-amber-700 font-medium mt-0.5">₹{ongoingTripExpenses.toFixed(2)} Spent</p>
+                  </div>
+                  
+                  {/* Right: Pending Submission */}
+                  <div className="border-l border-amber-200 pl-4">
+                    <p className="text-xs font-semibold text-amber-700 mb-1">Pending Submission</p>
+                    <p className="text-lg font-bold text-amber-900" style={{ fontFamily: 'var(--font-display)' }}>{tripsPendingSubmission.length} Trips</p>
+                    <p className="text-sm text-amber-700 font-medium mt-0.5">₹{pendingSubmissionAmount.toFixed(2)} Pending</p>
+                  </div>
+                </div>
+
+                {/* Submitted Settlement Info (Agar hai toh) */}
+                {submittedPendingAmount > 0 && (
+                  <div className="mt-3 pt-3 border-t border-amber-200/50">
+                    <p className="text-xs font-semibold text-rose-700">Claim Submitted, Settlement Pending</p>
+                    <p className="text-sm text-rose-800 font-bold">₹{submittedPendingAmount.toFixed(2)}</p>
+                  </div>
+                )}
               </div>
-              <ArrowRight className="w-5 h-5 text-indigo-500" />
+              <ArrowRight className="w-5 h-5 text-amber-500 group-hover:translate-x-1 transition-transform ml-2 shrink-0 mt-1" />
             </div>
           </Link>
         )}
-
-        <div className="space-y-3">
-          <Link href="/trips?filter=pending_submission" className="block p-4 bg-white border-2 border-dashed border-amber-200 rounded-2xl hover:border-amber-400 transition-all">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-xs font-semibold text-amber-700 uppercase tracking-wider">Trips pending claim submission</p>
-                <p className="text-xl font-bold text-amber-900 mt-1" style={{ fontFamily: 'var(--font-display)' }}>{tripsPendingSubmission.length}</p>
-              </div>
-              <ArrowRight className="w-5 h-5 text-amber-500" />
-            </div>
-          </Link>
-          <Link href="/trips?filter=pending_submission" className="block p-4 bg-white border-2 border-dashed border-amber-200 rounded-2xl hover:border-amber-400 transition-all">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-xs font-semibold text-amber-700 uppercase tracking-wider">Spent pending for submission</p>
-                <p className="text-xl font-bold text-amber-900 mt-1" style={{ fontFamily: 'var(--font-display)' }}>₹{pendingSubmissionAmount.toFixed(2)}</p>
-              </div>
-              <ArrowRight className="w-5 h-5 text-amber-500" />
-            </div>
-          </Link>
-          <Link href="/trips?filter=submitted" className="block p-4 bg-white border-2 border-dashed border-rose-200 rounded-2xl hover:border-rose-400 transition-all">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-xs font-semibold text-rose-700 uppercase tracking-wider">Submitted, Settlement pending</p>
-                <p className="text-xl font-bold text-rose-900 mt-1" style={{ fontFamily: 'var(--font-display)' }}>₹{submittedPendingAmount.toFixed(2)}</p>
-              </div>
-              <ArrowRight className="w-5 h-5 text-rose-500" />
-            </div>
-          </Link>
-        </div>
 
         <div className="flex items-center justify-between mt-6">
           <h2 className="text-lg font-bold" style={{ fontFamily: 'var(--font-display)' }}>Recent Trips</h2>
