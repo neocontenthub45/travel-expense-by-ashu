@@ -1,13 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { uploadReceipt } from "@/lib/storage";
 import type { Trip } from "@/lib/types";
 import { Loader2, Camera, Paperclip } from "lucide-react";
 import { showToast } from "@/lib/toast";
-import { useState, useRef } from "react";
 
 const CATEGORIES = ["Food", "Taxi", "Hotel", "Flight", "Train", "Bus", "Fuel", "Shopping", "Other"];
 
