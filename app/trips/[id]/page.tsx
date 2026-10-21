@@ -9,6 +9,7 @@ import ClaimExportSection from "@/components/TripActions/ClaimExportSection";
 import ExpenseActions from "@/components/TripActions/ExpenseActions";
 import { Edit3, Loader2, Receipt } from "lucide-react";
 import BackButton from "@/components/BackButton";
+import DeleteTripButton from "@/components/TripActions/DeleteTripButton";
 import PageTransition from "@/components/PageTransition";
 
 export default function TripDetailPage({ params }: { params: Promise<{ id: string }> }) {
@@ -74,13 +75,16 @@ export default function TripDetailPage({ params }: { params: Promise<{ id: strin
                   <span className="bg-slate-200 text-slate-700 px-2 py-0.5 rounded text-xs">{trip.currency}</span>
                 </p>
               </div>
-              <div className="flex items-center gap-2">
-                <Link
-                  href={`/trips/${trip.id}/edit`}
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-semibold text-slate-600 bg-white border border-slate-200 hover:bg-slate-50 transition-colors shadow-sm"
-                >
-                  <Edit3 className="w-4 h-4" /> Edit
-                </Link>
+              <div className="flex flex-col items-end gap-2">
+                <div className="flex items-center gap-2">
+                  <Link
+                    href={`/trips/${trip.id}/edit`}
+                    className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-semibold text-slate-700 bg-white border border-slate-200 hover:bg-slate-50 transition-colors shadow-sm"
+                  >
+                    <Edit3 className="w-4 h-4" /> Edit
+                  </Link>
+                  <DeleteTripButton tripId={trip.id} tripName={trip.trip_name} />
+                </div>
                 <span className={`text-xs px-3 py-1.5 rounded-lg font-bold uppercase tracking-wider ${
                   trip.claim_status === "ongoing" ? "bg-indigo-100 text-indigo-700" :
                   trip.claim_status === "closed" ? "bg-amber-100 text-amber-700" :

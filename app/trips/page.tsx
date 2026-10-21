@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Receipt, Plane, Loader2, Search } from "lucide-react";
+import BackButton from "@/components/BackButton";
 import { createClient } from "@/lib/supabase/client";
 import type { Trip } from "@/lib/types";
 import PageTransition from "@/components/PageTransition";
@@ -41,6 +42,10 @@ export default function TripsPage() {
   return (
     <PageTransition>
       <div className="space-y-6">
+                <div>
+          <BackButton label="Back to Dashboard" className="mb-4" />
+        </div>
+        
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <h1 className="text-2xl font-bold text-slate-900" style={{ fontFamily: 'var(--font-display)' }}>My Trips</h1>

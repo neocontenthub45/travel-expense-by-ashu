@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { Loader2 } from "lucide-react";
+import BackButton from "@/components/BackButton";
 import { supabase } from "@/lib/supabase";
 
 export default function NewTripPage() {
@@ -36,8 +38,9 @@ export default function NewTripPage() {
   }
 
   return (
-    <div className="max-w-md mx-auto">
-      <h1 className="text-2xl font-bold text-gray-900 mb-4">New Trip</h1>
+          <div className="max-w-md mx-auto">
+        <BackButton label="Cancel" className="mb-4" />
+        <h1 className="text-2xl font-bold text-slate-900 mb-1" style={{ fontFamily: 'var(--font-display)' }}>New Trip</h1>
 
       <form onSubmit={handleSubmit} className="space-y-4 bg-white p-6 rounded-lg border border-gray-200">
         <div>
