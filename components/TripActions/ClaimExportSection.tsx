@@ -12,7 +12,8 @@ export default function ClaimExportSection({ trip, expenses }: { trip: Trip, exp
   const supabase = createClient();
   const [loading, setLoading] = useState(false);
   const [action, setAction] = useState("");
-  const [optimisticStatus, setOptimisticStatus] = useState(trip.claim_status); // Turant UI change ke liye
+  const [optimisticStatus, setOptimisticStatus] = useState(trip.claim_status);
+  const [optimisticClaimed, setOptimisticClaimed] = useState(false); // NAYA STATE
 
   const hasSubmitted = expenses.some(e => e.claim_status === "submitted" || e.claim_status === "claimed");
   const allClaimed = expenses.length > 0 && expenses.every(e => e.claim_status === "claimed");
@@ -46,15 +47,24 @@ export default function ClaimExportSection({ trip, expenses }: { trip: Trip, exp
     } finally { setLoading(false); setAction(""); }
   }
 
-  async function handleMarkClaimed() {
+    async function handleMarkClaimed() {
     if (!confirm("Mark this claim as settled/claimed?")) return;
-    setLoading(true); setAction("claimed");
+    setLoading(true); 
+    setAction("claimed");
+    setOptimisticClaimed(true); // Button ko turant hide/disable kar do
+    
     try {
       await supabase.from("expenses").update({ claim_status: "claimed" }).eq("trip_id", trip.id);
       showToast("Claim settled!", "success");
       router.refresh();
-    } catch (err: any) { showToast(err.message, "error"); } finally { setLoading(false); setAction(""); }
-  }
+    } catch (err: any) { 
+      showToast(err.message, "error"); 
+      setOptimisticClaimed(false); // Error aaye toh wapas dikha do
+    } finally { 
+      setLoading(false); 
+      setAction(""); 
+    }
+    }
 
   // Delete bills function same rahega...
   async function handleDeleteBills() {
@@ -102,15 +112,9 @@ export default function ClaimExportSection({ trip, expenses }: { trip: Trip, exp
         </button>
       )}
 
-      {optimisticStatus === "claimed" && !allClaimed && (
+            {optimisticStatus === "claimed" && !allClaimed && !optimisticClaimed && (
         <button onClick={handleMarkClaimed} disabled={loading} className="flex items-center gap-1.5 px-3 py-1.5 bg-emerald-50 text-emerald-700 rounded-lg text-sm font-medium hover:bg-emerald-100">
           {loading && action === "claimed" ? <Loader2 className="w-4 h-4 animate-spin" /> : <CheckCircle className="w-4 h-4" />} Mark as Claimed
-        </button>
-      )}
-
-      {allClaimed && hasFiles && (
-        <button onClick={handleDeleteBills} disabled={loading} className="flex items-center gap-1.5 px-3 py-1.5 bg-rose-50 text-rose-700 rounded-lg text-sm font-medium hover:bg-rose-100">
-          {loading && action === "delete" ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />} Delete Bills
         </button>
       )}
     </div>
