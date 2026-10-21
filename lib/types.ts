@@ -19,7 +19,7 @@ export type Expense = {
   expense_date: string
   receipt_url: string | null
   file_size: number
-  claim_status: 'pending' | 'claimed' | 'exported' | 'deleted'
+    claim_status: 'pending' | 'submitted' | 'claimed' | 'exported' | 'deleted'
   claimed_at: string | null
   exported_at: string | null
   file_deleted_at: string | null
