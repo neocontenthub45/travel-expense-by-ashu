@@ -7,7 +7,8 @@ import type { Trip, Expense } from "@/lib/types";
 import ViewBillButton from "@/components/ViewBillButton";
 import ClaimExportSection from "@/components/TripActions/ClaimExportSection";
 import ExpenseActions from "@/components/TripActions/ExpenseActions";
-import { ArrowLeft, Edit3, Loader2, Receipt } from "lucide-react";
+import { Edit3, Loader2, Receipt } from "lucide-react";
+import BackButton from "@/components/BackButton";
 import PageTransition from "@/components/PageTransition";
 
 export default function TripDetailPage({ params }: { params: Promise<{ id: string }> }) {
@@ -59,9 +60,7 @@ export default function TripDetailPage({ params }: { params: Promise<{ id: strin
       <div className="space-y-6">
         
         <div>
-          <Link href="/trips" className="text-sm font-medium text-slate-500 hover:text-indigo-600 flex items-center gap-1 mb-2 transition-colors">
-            <ArrowLeft className="w-4 h-4" /> Back to trips
-          </Link>
+          <BackButton label="Back to Trips" className="mb-4" />
           
           {/* Boarding Pass Header */}
           <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm relative overflow-hidden mt-3">

@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { showToast } from "@/lib/toast";
 import { User, Mail, Lock, Loader2, LogOut, ArrowLeft, ShieldCheck } from "lucide-react";
+import BackButton from "@/components/BackButton";
 import Link from "next/link";
 import PageTransition from "@/components/PageTransition";
 
@@ -74,9 +75,7 @@ export default function SettingsPage() {
     <PageTransition>
       <div className="max-w-md mx-auto space-y-6">
         <div>
-          <Link href="/dashboard" className="text-sm text-slate-500 hover:text-slate-900 flex items-center gap-1 mb-4 transition-colors">
-            <ArrowLeft className="w-4 h-4" /> Back to Dashboard
-          </Link>
+          <BackButton label="Back to Dashboard" className="mb-4" />
           <h1 className="text-2xl font-bold text-slate-900" style={{ fontFamily: 'var(--font-display)' }}>Settings</h1>
         </div>
 

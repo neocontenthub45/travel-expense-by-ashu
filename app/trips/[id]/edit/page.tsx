@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { showToast } from "@/lib/toast";
 import { Loader2 } from "lucide-react";
+import BackButton from "@/components/BackButton";
 import PageTransition from "@/components/PageTransition";
 import type { Trip } from "@/lib/types";
 import { use } from "react";
@@ -62,8 +63,9 @@ export default function EditTripPage({ params }: { params: Promise<{ id: string 
 
   return (
     <PageTransition>
-      <div className="max-w-md mx-auto">
-        <h1 className="text-2xl font-bold text-slate-900 mb-6">Edit Trip</h1>
+            <div className="max-w-md mx-auto">
+        <BackButton label="Cancel" className="mb-4" />
+        <h1 className="text-2xl font-bold text-slate-900 mb-6" style={{ fontFamily: 'var(--font-display)' }}>Edit Trip</h1>
         <form onSubmit={handleSubmit} className="space-y-4 bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
           <div>
             <label className="block text-sm font-medium text-slate-700 mb-1">Trip Name *</label>
