@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
-import { Plane, Receipt, CheckCircle2, Clock, ArrowRight, FolderOpen, Plus } from "lucide-react";
+import { Plane, Receipt, CheckCircle2, Clock, ArrowRight, FolderOpen, Plus, Lock } from "lucide-react";
 import PageTransition from "@/components/PageTransition";
 import GlobalExportButton from "@/components/Dashboard/GlobalExportButton";
 import StorageBar from "@/components/Dashboard/StorageBar";
@@ -25,13 +25,16 @@ export default async function DashboardPage() {
   const e = expenses || [];
 
   const totalTrips = t.length;
-  const activeTrips = t.filter(trip => trip.claim_status === "ongoing").length;
+  const activeTrips = t.filter(trip => trip.claim_status === "ongoing");
   const totalSpent = e.reduce((acc, curr) => acc + Number(curr.amount), 0);
   const totalClaimed = e.filter(exp => exp.claim_status === "claimed").reduce((acc, curr) => acc + Number(curr.amount), 0);
   
   const tripsPendingSubmission = t.filter(trip => trip.claim_status === "closed");
   const pendingSubmissionAmount = e.filter(exp => tripsPendingSubmission.some(trip => trip.id === exp.trip_id)).reduce((acc, curr) => acc + Number(curr.amount), 0);
   const submittedPendingAmount = e.filter(exp => exp.claim_status === "submitted").reduce((acc, curr) => acc + Number(curr.amount), 0);
+
+  // NAYA: Ongoing trips ka total expense calculate karo
+  const ongoingTripExpenses = e.filter(exp => activeTrips.some(trip => trip.id === exp.trip_id)).reduce((acc, curr) => acc + Number(curr.amount), 0);
 
   return (
     <PageTransition>
@@ -69,7 +72,7 @@ export default async function DashboardPage() {
             <div className="flex items-center gap-2 text-emerald-600 mb-1">
               <Clock className="w-4 h-4" /> <p className="text-xs font-medium">Active Trips</p>
             </div>
-            <p className="text-2xl font-bold text-emerald-600" style={{ fontFamily: 'var(--font-display)' }}>{activeTrips}</p>
+            <p className="text-2xl font-bold text-emerald-600" style={{ fontFamily: 'var(--font-display)' }}>{activeTrips.length}</p>
           </Link>
 
           <Link href="/dashboard" className="block p-4 bg-white rounded-2xl border border-slate-200 shadow-sm hover:border-indigo-300 hover:shadow-md transition-all">
@@ -86,6 +89,22 @@ export default async function DashboardPage() {
             <p className="text-2xl font-bold text-emerald-600" style={{ fontFamily: 'var(--font-display)' }}>₹{totalClaimed.toFixed(2)}</p>
           </Link>
         </div>
+
+        {/* NAYA CARD: Ongoing Trips Warning */}
+        {activeTrips.length > 0 && (
+          <Link href="/trips?filter=ongoing" className="block p-4 bg-indigo-50 border-2 border-dashed border-indigo-200 rounded-2xl hover:border-indigo-400 transition-all">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-xs font-semibold text-indigo-700 uppercase tracking-wider">Ongoing Trips (Don't forget to close)</p>
+                <div className="flex items-center gap-4 mt-1">
+                  <p className="text-xl font-bold text-indigo-900" style={{ fontFamily: 'var(--font-display)' }}>{activeTrips.length} Trips</p>
+                  <p className="text-lg font-bold text-indigo-800" style={{ fontFamily: 'var(--font-display)' }}>₹{ongoingTripExpenses.toFixed(2)} Spent</p>
+                </div>
+              </div>
+              <ArrowRight className="w-5 h-5 text-indigo-500" />
+            </div>
+          </Link>
+        )}
 
         <div className="space-y-3">
           <Link href="/trips?filter=pending_submission" className="block p-4 bg-white border-2 border-dashed border-amber-200 rounded-2xl hover:border-amber-400 transition-all">
