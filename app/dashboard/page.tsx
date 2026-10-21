@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
-import { Plane, Receipt, CheckCircle2, Clock, AlertCircle, Plus, ArrowRight, FolderOpen } from "lucide-react";
+import { Plane, Receipt, CheckCircle2, Clock, ArrowRight, FolderOpen, Plus } from "lucide-react";
 import PageTransition from "@/components/PageTransition";
 import GlobalExportButton from "@/components/Dashboard/GlobalExportButton";
 import StorageBar from "@/components/Dashboard/StorageBar";
@@ -9,7 +9,15 @@ export const dynamic = "force-dynamic";
 
 export default async function DashboardPage() {
   const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
   
+  // Profile fetch
+  let userName = "there";
+  if (user) {
+    const { data: profile } = await supabase.from("profiles").select("full_name").eq("id", user.id).single();
+    if (profile?.full_name) userName = profile.full_name;
+  }
+
   const { data: trips } = await supabase.from("trips").select("*").order("start_date", { ascending: false });
   const { data: expenses } = await supabase.from("expenses").select("amount, claim_status, trip_id, file_size");
 
@@ -29,11 +37,10 @@ export default async function DashboardPage() {
     <PageTransition>
       <div className="space-y-6">
         
-        {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-bold" style={{ fontFamily: 'var(--font-display)' }}>Dashboard</h1>
-            <p className="text-slate-500 text-sm mt-1">Welcome back! Here is your overview.</p>
+            <h1 className="text-2xl font-bold text-slate-900" style={{ fontFamily: 'var(--font-display)' }}>Welcome, {userName} 👋</h1>
+            <p className="text-slate-500 text-sm mt-1">Here is your financial overview.</p>
           </div>
           <div className="flex items-center gap-1.5 sm:gap-2">
             <Link href="/dashboard/expenses/new" className="flex items-center justify-center gap-1 px-2.5 py-2 rounded-xl bg-gradient-to-br from-indigo-600 to-[#7B3FD6] text-white text-[13px] sm:text-sm font-semibold shadow-md hover:-translate-y-0.5 transition-all flex-1 sm:flex-none">
@@ -50,7 +57,6 @@ export default async function DashboardPage() {
 
         <StorageBar expenses={e} />
 
-        {/* Cards - 2 Column */}
         <div className="grid grid-cols-2 gap-3">
           <Link href="/trips" className="block p-4 bg-white rounded-2xl border border-slate-200 shadow-sm hover:border-indigo-300 hover:shadow-md transition-all">
             <div className="flex items-center gap-2 text-slate-500 mb-1">
@@ -81,7 +87,6 @@ export default async function DashboardPage() {
           </Link>
         </div>
 
-        {/* Full Width Cards (Ticket Style) */}
         <div className="space-y-3">
           <Link href="/trips?filter=pending_submission" className="block p-4 bg-white border-2 border-dashed border-amber-200 rounded-2xl hover:border-amber-400 transition-all">
             <div className="flex items-center justify-between">
@@ -92,7 +97,6 @@ export default async function DashboardPage() {
               <ArrowRight className="w-5 h-5 text-amber-500" />
             </div>
           </Link>
-
           <Link href="/trips?filter=pending_submission" className="block p-4 bg-white border-2 border-dashed border-amber-200 rounded-2xl hover:border-amber-400 transition-all">
             <div className="flex items-center justify-between">
               <div>
@@ -102,7 +106,6 @@ export default async function DashboardPage() {
               <ArrowRight className="w-5 h-5 text-amber-500" />
             </div>
           </Link>
-
           <Link href="/trips?filter=submitted" className="block p-4 bg-white border-2 border-dashed border-rose-200 rounded-2xl hover:border-rose-400 transition-all">
             <div className="flex items-center justify-between">
               <div>
@@ -113,6 +116,32 @@ export default async function DashboardPage() {
             </div>
           </Link>
         </div>
+
+        <div className="flex items-center justify-between mt-6">
+          <h2 className="text-lg font-bold" style={{ fontFamily: 'var(--font-display)' }}>Recent Trips</h2>
+          <Link href="/trips" className="text-sm text-indigo-600 font-medium hover:underline flex items-center gap-1">View all <ArrowRight className="w-4 h-4"/></Link>
+        </div>
+        
+        {t.length === 0 ? (
+           <div className="text-center p-8 bg-white rounded-xl border border-slate-200">No trips yet. Create one to get started.</div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            {t.slice(0, 4).map((trip) => (
+              <Link key={trip.id} href={`/trips/${trip.id}`} className="block p-4 bg-white rounded-xl border border-slate-200 hover:border-indigo-300 transition-all shadow-sm">
+                <div className="flex justify-between items-start">
+                  <div>
+                    <h3 className="font-bold text-slate-900" style={{ fontFamily: 'var(--font-display)' }}>{trip.trip_name}</h3>
+                    <p className="text-xs text-slate-500 mt-1">{trip.start_date} · {trip.country || 'India'}</p>
+                  </div>
+                  <span className={`text-[10px] uppercase font-bold px-2 py-1 rounded-md ${
+                    trip.claim_status === 'ongoing' ? 'bg-indigo-50 text-indigo-700' : 
+                    trip.claim_status === 'closed' ? 'bg-amber-50 text-amber-700' : 'bg-emerald-50 text-emerald-700'
+                  }`}>{trip.claim_status}</span>
+                </div>
+              </Link>
+            ))}
+          </div>
+        )}
 
         <GlobalExportButton />
       </div>
