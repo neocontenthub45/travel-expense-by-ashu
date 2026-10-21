@@ -1,62 +1,23 @@
-import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
 export async function updateSession(request: NextRequest) {
-  let supabaseResponse = NextResponse.next({
-    request,
-  });
+  const path = request.nextUrl.pathname;
+  
+  // Public routes
+  if (path === "/" || path.startsWith("/login") || path.startsWith("/signup")) {
+    return NextResponse.next();
+  }
 
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        getAll() {
-          return request.cookies.getAll();
-        },
-        setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value, options }) =>
-            request.cookies.set(name, value)
-          );
-          supabaseResponse = NextResponse.next({
-            request,
-          });
-          cookiesToSet.forEach(({ name, value, options }) =>
-            supabaseResponse.cookies.set(name, value, options)
-          );
-        },
-      },
-    }
+  // Check if auth cookie exists (fast, no network call)
+  const hasAuthCookie = request.cookies.getAll().some(cookie => 
+    cookie.name.startsWith("sb-") && cookie.name.endsWith("-auth-token")
   );
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  // Agar user logged in nahi hai aur protected route access kar raha hai
-  if (
-    !user &&
-    !request.nextUrl.pathname.startsWith("/login") &&
-    !request.nextUrl.pathname.startsWith("/signup") &&
-    request.nextUrl.pathname !== "/"
-  ) {
+  if (!hasAuthCookie) {
     const url = request.nextUrl.clone();
     url.pathname = "/login";
     return NextResponse.redirect(url);
   }
 
-  // Agar user logged in hai aur login/signup page pe jane ki koshish kar raha hai
-    // Agar user logged in hai aur login/signup ya landing page pe jane ki koshish kar raha hai
-  if (
-    user &&
-    (request.nextUrl.pathname.startsWith("/login") ||
-      request.nextUrl.pathname.startsWith("/signup") ||
-      request.nextUrl.pathname === "/")
-  ) {
-    const url = request.nextUrl.clone();
-    url.pathname = "/dashboard";
-    return NextResponse.redirect(url);
-  }
-
-  return supabaseResponse;
+  return NextResponse.next();
 }
