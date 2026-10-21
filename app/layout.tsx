@@ -59,7 +59,6 @@ export default function RootLayout({
         </nav>
 
         <main className="max-w-5xl mx-auto px-4 py-6">{children}</main>
-        // ... body ke andar
 <ToastContainer />
 <PWARegister />
       </body>
