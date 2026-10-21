@@ -1,7 +1,12 @@
 import Link from "next/link";
+import { Receipt, Plane } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import type { Trip } from "@/lib/types";
+import PageTransition from "@/components/PageTransition";
+import EmptyState from "@/components/EmptyState";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 export default async function TripsPage() {
   const { data: trips, error } = await supabase
@@ -10,65 +15,85 @@ export default async function TripsPage() {
     .order("start_date", { ascending: false });
 
   if (error) {
-    return <p className="text-red-600">Error loading trips: {error.message}</p>;
+    return (
+      <div className="p-4 bg-rose-50 border border-rose-200 rounded-lg text-rose-800 text-sm">
+        Failed to load trips: {error.message}
+      </div>
+    );
   }
 
-  return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-gray-900">My Trips</h1>
-        <Link
-          href="/trips/new"
-          className="bg-black text-white px-4 py-2 rounded-md text-sm hover:bg-gray-800"
-        >
-          + New Trip
-        </Link>
-      </div>
+  const list = (trips as Trip[]) || [];
 
-      {!trips || trips.length === 0 ? (
-        <div className="text-center py-12 bg-white rounded-lg border border-gray-200">
-          <p className="text-gray-600">Abhi koi trip nahi hai.</p>
+  return (
+    <PageTransition>
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-bold text-slate-900">My Trips</h1>
+            <p className="text-sm text-slate-600 mt-1">
+              {list.length} {list.length === 1 ? "trip" : "trips"} recorded
+            </p>
+          </div>
           <Link
             href="/trips/new"
-            className="inline-block mt-3 text-black underline text-sm"
+            className="px-4 py-2 rounded-lg bg-indigo-600 text-white text-sm hover:bg-indigo-700 transition-colors shadow-sm"
           >
-            Pehli trip banao
+            + New Trip
           </Link>
         </div>
-      ) : (
-        <div className="space-y-3">
-          {(trips as Trip[]).map((trip) => (
-            <Link
-              key={trip.id}
-              href={`/trips/${trip.id}`}
-              className="block p-4 bg-white rounded-lg border border-gray-200 hover:border-gray-400 transition"
-            >
-              <div className="flex items-start justify-between">
-                <div>
-                  <h2 className="font-semibold text-gray-900">{trip.trip_name}</h2>
-                  <p className="text-sm text-gray-600 mt-1">
-                    {trip.start_date}
-                    {trip.end_date ? ` → ${trip.end_date}` : ""}
-                    {trip.country ? ` · ${trip.country}` : ""}
-                    {` · ${trip.currency}`}
-                  </p>
+
+        {list.length === 0 ? (
+          <EmptyState
+            icon={<Plane className="w-6 h-6" />}
+            title="No trips yet"
+            description="Start by creating your first trip to track expenses and bills."
+            action={
+              <Link
+                href="/trips/new"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-indigo-600 text-white text-sm hover:bg-indigo-700 transition-colors"
+              >
+                <Receipt className="w-4 h-4" />
+                Create your first trip
+              </Link>
+            }
+          />
+        ) : (
+          <div className="space-y-3">
+            {list.map((trip) => (
+              <Link
+                key={trip.id}
+                href={`/trips/${trip.id}`}
+                className="block p-5 bg-white rounded-xl border border-slate-200 hover:border-indigo-300 hover:shadow-md transition-all"
+              >
+                <div className="flex items-start justify-between gap-4">
+                  <div className="min-w-0">
+                    <h2 className="font-semibold text-slate-900 truncate">
+                      {trip.trip_name}
+                    </h2>
+                    <p className="text-sm text-slate-600 mt-1">
+                      {trip.start_date}
+                      {trip.end_date ? ` → ${trip.end_date}` : ""}
+                      {trip.country ? ` · ${trip.country}` : ""}
+                      {` · ${trip.currency}`}
+                    </p>
+                  </div>
+                  <span
+                    className={`shrink-0 text-xs px-2.5 py-1 rounded-full font-medium ${
+                      trip.claim_status === "ongoing"
+                        ? "bg-indigo-50 text-indigo-700"
+                        : trip.claim_status === "claimed"
+                        ? "bg-amber-50 text-amber-700"
+                        : "bg-slate-100 text-slate-700"
+                    }`}
+                  >
+                    {trip.claim_status}
+                  </span>
                 </div>
-                <span
-                  className={`text-xs px-2 py-1 rounded-full ${
-                    trip.claim_status === "ongoing"
-                      ? "bg-blue-100 text-blue-700"
-                      : trip.claim_status === "claimed"
-                      ? "bg-yellow-100 text-yellow-700"
-                      : "bg-gray-100 text-gray-700"
-                  }`}
-                >
-                  {trip.claim_status}
-                </span>
-              </div>
-            </Link>
-          ))}
-        </div>
-      )}
-    </div>
+              </Link>
+            ))}
+          </div>
+        )}
+      </div>
+    </PageTransition>
   );
 }

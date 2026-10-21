@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Link from "next/link";
+import { Plane } from "lucide-react";
+import ToastContainer from "@/components/Toast";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -15,7 +17,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Travel Expense Tracker",
-  description: "Track trips, bills, and claims",
+  description: "Track trips, bills, and claims effortlessly.",
 };
 
 export default function RootLayout({
@@ -25,21 +27,39 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-50 min-h-screen`}>
-        <nav className="bg-white border-b border-gray-200 px-4 py-3">
-          <div className="max-w-5xl mx-auto flex items-center justify-between">
-            <Link href="/" className="font-semibold text-lg text-gray-900">
-              ✈️ Travel Expense
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-slate-50 min-h-screen text-slate-900`}
+      >
+        <nav className="sticky top-0 z-40 bg-white/80 backdrop-blur border-b border-slate-200">
+          <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
+            <Link
+              href="/"
+              className="flex items-center gap-2 font-semibold text-slate-900 hover:text-indigo-600 transition-colors"
+            >
+              <span className="w-8 h-8 rounded-lg bg-indigo-600 text-white flex items-center justify-center">
+                <Plane className="w-4 h-4" />
+              </span>
+              <span>Travel Expense</span>
             </Link>
-            <div className="flex gap-4 text-sm">
-              <Link href="/trips" className="text-gray-700 hover:text-black">Trips</Link>
-              <Link href="/trips/new" className="bg-black text-white px-3 py-1.5 rounded-md hover:bg-gray-800">
+            <div className="flex items-center gap-2 text-sm">
+              <Link
+                href="/trips"
+                className="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors"
+              >
+                Trips
+              </Link>
+              <Link
+                href="/trips/new"
+                className="px-3 py-1.5 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 transition-colors shadow-sm"
+              >
                 + New Trip
               </Link>
             </div>
           </div>
         </nav>
-        <main className="max-w-5xl mx-auto px-4 py-6">{children}</main>
+
+        <main className="max-w-5xl mx-auto px-4 py-8">{children}</main>
+        <ToastContainer />
       </body>
     </html>
   );
