@@ -1,77 +1,126 @@
 import Link from "next/link";
-import { Plane, ArrowRight, ShieldCheck, Wallet, BarChart3, Receipt, CheckCircle2 } from "lucide-react";
+import { Plane, ArrowRight, ShieldCheck, BarChart3, Receipt } from "lucide-react";
+import { Bricolage_Grotesque, DM_Sans } from "next/font/google";
 import PageTransition from "@/components/PageTransition";
+
+const display = Bricolage_Grotesque({ subsets: ["latin"], weight: ["700", "800"] });
+const body = DM_Sans({ subsets: ["latin"], weight: ["400", "500", "700"] });
+
+// Ticket notches (half-circle cut-outs) just above the buttons "stub"
+const notchMask =
+  "radial-gradient(circle 11px at 0 calc(100% - 112px), #0000 98%, #000) left/51% 100% no-repeat, radial-gradient(circle 11px at 100% calc(100% - 112px), #0000 98%, #000) right/51% 100% no-repeat";
+
+const features = [
+  {
+    title: "Snap & Store",
+    text: "Take photos of bills on the go. We automatically compress and store them securely in the cloud.",
+    Icon: Receipt,
+  },
+  {
+    title: "Smart Dashboard",
+    text: "See exactly what is pending, submitted, and claimed at a glance. Track your financial overview easily.",
+    Icon: BarChart3,
+  },
+  {
+    title: "Claim Ready",
+    text: "Export your trip data as a ZIP file with CSV and images ready for reimbursement submission.",
+    Icon: ShieldCheck,
+  },
+];
 
 export default function LandingPage() {
   return (
     <PageTransition>
-      {/* Background Gradient Effect */}
-      <div className="absolute inset-0 -z-10 h-full w-full bg-white bg-[linear-gradient(to_right,#f0f0f0_1px,transparent_1px),linear-gradient(to_bottom,#f0f0f0_1px,transparent_1px)] bg-[size:4rem_4rem]">
-        <div className="absolute left-0 right-0 top-0 -z-10 m-auto h-[310px] w-[310px] rounded-full bg-indigo-500 opacity-20 blur-[100px]"></div>
-      </div>
+      {/* Main Container - Changed from fixed z-50 to normal flow with min-height */}
+      <div
+        className={`${body.className} min-h-[calc(100vh-60px)] w-full relative overflow-hidden text-white rounded-2xl shadow-xl mt-2
+          bg-[radial-gradient(circle_at_85%_8%,rgba(255,214,102,.45)_0,rgba(255,214,102,0)_38%),radial-gradient(circle_at_50%_112%,#FFB36B_0,rgba(255,179,107,0)_52%),linear-gradient(172deg,#5E6BFF_0%,#8A63F5_40%,#E26FC0_76%,#FF9A7A_100%)]`}
+      >
+        {/* Dotted flight path */}
+        <svg
+          className="pointer-events-none absolute left-1/2 top-0 h-[34vh] w-full max-w-[460px] -translate-x-1/2 opacity-70"
+          viewBox="0 0 460 260"
+          fill="none"
+          aria-hidden="true"
+        >
+          <path d="M-10 230C90 60 280 20 470 110" stroke="#fff" strokeWidth="1.6" strokeDasharray="3 8" strokeLinecap="round" />
+          <g transform="translate(372 66) rotate(28)">
+            <path d="M0-14 4-4 16 2v4L4 3 3 11 8 14v3L0 15-8 17v-3L-3 11-4 3-16 6V2L-4-4z" fill="#fff" />
+          </g>
+        </svg>
 
-      <div className="flex flex-col items-center justify-center min-h-[85vh] text-center px-4 pt-10">
-        
-        {/* Badge */}
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 border border-indigo-100 text-indigo-700 text-xs font-semibold mb-6 shadow-sm">
-          <span className="relative flex h-2 w-2">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-2 w-2 bg-indigo-500"></span>
-          </span>
-          New: Global Export Feature Added
-        </div>
-        
-        {/* Heading */}
-        <h1 className="text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight max-w-3xl mb-4 leading-tight">
-          Track expenses, manage bills, and <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">claim effortlessly.</span>
-        </h1>
-        
-        {/* Subheading */}
-        <p className="text-base md:text-lg text-slate-600 max-w-2xl mb-8">
-          The only expense manager designed for frequent business travelers. Snap receipts, organize by trip, and export claims in one click.
-        </p>
-        
-        {/* Buttons */}
-        <div className="flex items-center gap-3 mb-16">
-          <Link href="/signup" className="group flex items-center gap-2 px-6 py-3 rounded-xl bg-indigo-600 text-white text-sm font-semibold hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-200 hover:shadow-indigo-300 hover:-translate-y-0.5">
-            Get Started for Free 
-            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-          </Link>
-          <Link href="/login" className="px-6 py-3 rounded-xl bg-white text-slate-700 border border-slate-300 text-sm font-semibold hover:bg-slate-50 transition-all hover:-translate-y-0.5">
-            Log In
-          </Link>
-        </div>
+        <div className="relative mx-auto flex min-h-[calc(100vh-60px)] w-full max-w-[460px] flex-col justify-between gap-[clamp(8px,1.6vh,16px)] px-[18px] pb-[calc(18px+env(safe-area-inset-bottom))] pt-[calc(14px+env(safe-area-inset-top))]">
+          {/* Logo */}
+          <header className={`${display.className} flex items-center gap-2.5 text-[17px] font-bold`}>
+            <span className="grid h-[34px] w-[34px] place-items-center rounded-full bg-white">
+              <Plane className="h-[18px] w-[18px] text-indigo-600" fill="currentColor" />
+            </span>
+            Travel Expense
+          </header>
 
-        {/* Features Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl w-full text-left">
-          {/* Card 1 */}
-          <div className="group p-6 bg-white/80 backdrop-blur-sm rounded-2xl border border-slate-200 shadow-sm hover:shadow-xl hover:border-indigo-300 transition-all duration-300 hover:-translate-y-1">
-            <div className="w-12 h-12 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center mb-4 group-hover:scale-110 group-hover:bg-indigo-600 group-hover:text-white transition-all duration-300">
-              <Receipt className="w-6 h-6" />
+          {/* Hero */}
+          <section className="flex flex-col gap-[clamp(6px,1.3vh,12px)] mt-4">
+            {/* Badge */}
+            <span className="inline-flex self-start items-center gap-2 rounded-full border border-dashed border-white/75 bg-white/20 px-3 py-[5px] text-xs font-medium">
+              <span className="h-[7px] w-[7px] animate-pulse rounded-full bg-[#FF7A4D] motion-reduce:animate-none" />
+              New: Global Export Feature Added
+            </span>
+
+            {/* Heading */}
+            <h1
+              className={`${display.className} text-[clamp(29px,8.4vw,38px)] font-extrabold leading-[1.02] tracking-[-0.035em]`}
+            >
+              Track expenses, manage bills, and claim effortlessly.
+            </h1>
+
+            {/* Subheading */}
+            <p className="text-[clamp(13px,1.9vh,15px)] leading-[1.42] text-white/95">
+              The only expense manager designed for frequent business travelers. Snap receipts, organize by trip, and
+              export claims in one click.
+            </p>
+          </section>
+
+          {/* Boarding pass: features + button stub */}
+          <section
+            aria-label="Features"
+            className="flex flex-col rounded-[22px] bg-[#FFFBF4] text-[#17163F] shadow-[0_18px_40px_-12px_rgba(90,40,150,0.5)] dark:bg-[#1A1942] dark:text-[#F3F1FF] mt-6"
+            style={{ WebkitMask: notchMask, mask: notchMask }}
+          >
+            <div className="px-4 pt-1">
+              {features.map(({ title, text, Icon }) => (
+                <div
+                  key={title}
+                  className="flex items-start gap-3 py-[clamp(8px,1.5vh,12px)] [&+&]:border-t [&+&]:border-[#D9D2E6] dark:[&+&]:border-[#3D3B72]"
+                >
+                  <span className="grid h-9 w-9 flex-none -rotate-[8deg] place-items-center rounded-full border-[1.5px] border-dashed border-indigo-600 text-indigo-600 dark:border-[#9A94FF] dark:text-[#9A94FF]">
+                    <Icon className="h-[17px] w-[17px]" strokeWidth={2} />
+                  </span>
+                  <div>
+                    <h3 className={`${display.className} mb-0.5 mt-px text-[15px] font-bold tracking-[-0.01em]`}>{title}</h3>
+                    <p className="text-[12.5px] leading-[1.38] text-[#5E5C7E] dark:text-[#B1AFD3]">{text}</p>
+                  </div>
+                </div>
+              ))}
             </div>
-            <h3 className="font-bold text-slate-900 mb-2">Snap & Store</h3>
-            <p className="text-sm text-slate-600 leading-relaxed">Take photos of bills on the go. We automatically compress and store them securely in the cloud.</p>
-          </div>
 
-          {/* Card 2 */}
-          <div className="group p-6 bg-white/80 backdrop-blur-sm rounded-2xl border border-slate-200 shadow-sm hover:shadow-xl hover:border-indigo-300 transition-all duration-300 hover:-translate-y-1">
-            <div className="w-12 h-12 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center mb-4 group-hover:scale-110 group-hover:bg-purple-600 group-hover:text-white transition-all duration-300">
-              <BarChart3 className="w-6 h-6" />
+            {/* Stub with buttons */}
+            <div className="mt-auto flex h-28 items-center gap-2.5 border-t-2 border-dashed border-[#D9D2E6] px-4 dark:border-[#3D3B72]">
+              <Link
+                href="/signup"
+                className="group flex h-[52px] flex-[1.7] items-center justify-center gap-[7px] whitespace-nowrap rounded-[14px] bg-gradient-to-br from-indigo-600 to-[#7B3FD6] text-[15.5px] font-bold text-white shadow-[0_10px_22px_-8px_rgba(79,70,229,0.7)] transition-all hover:-translate-y-0.5 focus-visible:outline focus-visible:outline-[3px] focus-visible:outline-offset-2 focus-visible:outline-[#FF7A4D]"
+              >
+                Get Started for Free
+                <ArrowRight className="h-[17px] w-[17px] transition-transform group-hover:translate-x-1" />
+              </Link>
+              <Link
+                href="/login"
+                className="flex h-[52px] flex-1 items-center justify-center whitespace-nowrap rounded-[14px] border-[1.5px] border-[#D9D2E6] text-[15.5px] font-bold transition-all hover:-translate-y-0.5 hover:bg-black/[0.03] focus-visible:outline focus-visible:outline-[3px] focus-visible:outline-offset-2 focus-visible:outline-[#FF7A4D] dark:border-[#3D3B72] dark:hover:bg-white/5"
+              >
+                Log In
+              </Link>
             </div>
-            <h3 className="font-bold text-slate-900 mb-2">Smart Dashboard</h3>
-            <p className="text-sm text-slate-600 leading-relaxed">See exactly what is pending, submitted, and claimed at a glance. Track your financial overview easily.</p>
-          </div>
-
-          {/* Card 3 */}
-          <div className="group p-6 bg-white/80 backdrop-blur-sm rounded-2xl border border-slate-200 shadow-sm hover:shadow-xl hover:border-indigo-300 transition-all duration-300 hover:-translate-y-1">
-            <div className="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center mb-4 group-hover:scale-110 group-hover:bg-emerald-600 group-hover:text-white transition-all duration-300">
-              <ShieldCheck className="w-6 h-6" />
-            </div>
-            <h3 className="font-bold text-slate-900 mb-2">Claim Ready</h3>
-            <p className="text-sm text-slate-600 leading-relaxed">Export your trip data as a ZIP file with CSV and images ready for reimbursement submission.</p>
-          </div>
+          </section>
         </div>
-
       </div>
     </PageTransition>
   );
