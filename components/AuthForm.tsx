@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
+import Link from "next/link"; // <--- YEH IMPORT ZAROORI HAI
 import { createClient } from "@/lib/supabase/client";
 import { Mail, Lock, Loader2, ArrowRight } from "lucide-react";
 import { showToast } from "@/lib/toast";
@@ -109,8 +109,9 @@ export default function AuthForm({ mode }: { mode: "login" | "signup" }) {
               </div>
             </div>
 
+            {/* FORGOT PASSWORD LINK */}
             {isLogin && (
-              <div className="flex justify-end -mt-2">
+              <div className="flex justify-end -mt-2 pb-2">
                 <Link href="/forgot-password" className="text-xs font-semibold text-indigo-600 hover:underline">
                   Forgot Password?
                 </Link>
