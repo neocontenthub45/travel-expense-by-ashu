@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Plane, Plus, Receipt, Wallet } from "lucide-react";
 import PageTransition from "@/components/PageTransition";
+import StorageWarning from "@/components/StorageWarning";
 
 export default function Home() {
   return (
@@ -11,9 +12,11 @@ export default function Home() {
             Welcome back, Dear 👋
           </h1>
           <p className="mt-2 text-slate-600">
-            Manage your business trips, bills, and claims in one place.
-          </p>
-        </div>
+          Manage your business trips, bills, and claims in one place.
+        </p>
+      </div>
+
+      <StorageWarning />
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <Link

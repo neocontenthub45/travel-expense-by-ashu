@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import type { Trip, Expense } from "@/lib/types";
 import ViewBillButton from "@/components/ViewBillButton";
+import ClaimExportSection from "@/components/TripActions/ClaimExportSection";
 
 export default async function TripDetailPage({
   params,
@@ -74,8 +75,10 @@ const supabase = await createClient();
         </div>
       </div>
 
+            <ClaimExportSection trip={t} expenses={list} />
+
       <div className="flex items-center justify-between">
-        <h2 className="text-lg font-semibold text-gray-900">Expenses</h2>
+        <h2 className="text-lg font-semibold text-slate-900">Expenses</h2>
         <Link
           href={`/trips/${t.id}/expenses/new`}
           className="bg-black text-white px-4 py-2 rounded-md text-sm hover:bg-gray-800"
