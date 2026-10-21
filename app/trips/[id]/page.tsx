@@ -4,6 +4,8 @@ import { createClient } from "@/lib/supabase/server";
 import type { Trip, Expense } from "@/lib/types";
 import ViewBillButton from "@/components/ViewBillButton";
 import ClaimExportSection from "@/components/TripActions/ClaimExportSection";
+import ExpenseActions from "@/components/TripActions/ExpenseActions";
+import { Edit3 } from "lucide-react";
 
 export default async function TripDetailPage({
   params,
@@ -50,9 +52,18 @@ const supabase = await createClient();
               {` · ${t.currency}`}
             </p>
           </div>
-          <span className="text-xs px-2 py-1 rounded-full bg-blue-100 text-blue-700">
-            {t.claim_status}
-          </span>
+                    <div className="flex items-center gap-2">
+            <Link
+              href={`/trips/${t.id}/edit`}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium text-slate-600 bg-slate-100 hover:bg-slate-200 transition-colors"
+            >
+              <Edit3 className="w-4 h-4" />
+              Edit
+            </Link>
+            <span className="text-xs px-2.5 py-1.5 rounded-full font-medium bg-indigo-50 text-indigo-700">
+              {t.claim_status}
+            </span>
+          </div>
         </div>
       </div>
 
@@ -129,9 +140,12 @@ const supabase = await createClient();
                     </span>
                   </div>
                 </div>
-                <p className="font-semibold text-gray-900 whitespace-nowrap">
-                  {e.currency} {Number(e.amount).toFixed(2)}
-                </p>
+                  <div className="flex flex-col items-end gap-2">
+                  <p className="font-semibold text-slate-900 whitespace-nowrap">
+                    {e.currency} {Number(e.amount).toFixed(2)}
+                  </p>
+                  <ExpenseActions expenseId={e.id} tripId={t.id} receiptUrl={e.receipt_url} />
+                </div>
               </div>
             </div>
           ))}
