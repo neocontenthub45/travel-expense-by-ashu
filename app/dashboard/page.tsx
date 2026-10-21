@@ -83,7 +83,7 @@ export default async function DashboardPage() {
 
         {/* Full Width Cards (Ticket Style) */}
         <div className="space-y-3">
-          <Link href="/trips?filter=pending_submission" className="block p-4 bg-[#FFFBF4] border-2 border-dashed border-amber-200 rounded-2xl hover:border-amber-400 transition-all">
+          <Link href="/trips?filter=pending_submission" className="block p-4 bg-white border-2 border-dashed border-amber-200 rounded-2xl hover:border-amber-400 transition-all">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-xs font-semibold text-amber-700 uppercase tracking-wider">Trips pending claim submission</p>
@@ -93,7 +93,7 @@ export default async function DashboardPage() {
             </div>
           </Link>
 
-          <Link href="/trips?filter=pending_submission" className="block p-4 bg-[#FFFBF4] border-2 border-dashed border-amber-200 rounded-2xl hover:border-amber-400 transition-all">
+          <Link href="/trips?filter=pending_submission" className="block p-4 bg-white border-2 border-dashed border-amber-200 rounded-2xl hover:border-amber-400 transition-all">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-xs font-semibold text-amber-700 uppercase tracking-wider">Spent pending for submission</p>
@@ -103,7 +103,7 @@ export default async function DashboardPage() {
             </div>
           </Link>
 
-          <Link href="/trips?filter=submitted" className="block p-4 bg-[#FFFBF4] border-2 border-dashed border-rose-200 rounded-2xl hover:border-rose-400 transition-all">
+          <Link href="/trips?filter=submitted" className="block p-4 bg-white border-2 border-dashed border-rose-200 rounded-2xl hover:border-rose-400 transition-all">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-xs font-semibold text-rose-700 uppercase tracking-wider">Submitted, Settlement pending</p>

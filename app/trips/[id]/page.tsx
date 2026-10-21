@@ -64,7 +64,7 @@ export default function TripDetailPage({ params }: { params: Promise<{ id: strin
           </Link>
           
           {/* Boarding Pass Header */}
-          <div className="bg-[#FFFBF4] border border-slate-200 rounded-2xl p-5 shadow-sm relative overflow-hidden mt-3">
+          <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm relative overflow-hidden mt-3">
             <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
               <div>
                 <h1 className="text-2xl font-bold text-slate-900" style={{ fontFamily: 'var(--font-display)' }}>{trip.trip_name}</h1>

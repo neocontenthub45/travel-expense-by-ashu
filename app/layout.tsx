@@ -46,11 +46,14 @@ export default function RootLayout({
           <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
             <Link
               href="/"
-              className="flex items-center gap-2 font-bold hover:text-indigo-600 transition-colors"
+              className="flex items-center gap-2.5 font-bold hover:text-indigo-600 transition-colors"
               style={{ fontFamily: 'var(--font-display)' }}
             >
-            <img src="/logo-header.png" alt="Logo" className="w-8 h-8 object-contain" />
-              <span>Travel Expense</span>
+              <img src="/logo-header.png" alt="Logo" className="w-8 h-8 object-contain" />
+              <span className="flex flex-col leading-none">
+                <span>Travel Expense</span>
+                <span className="text-[10px] text-slate-500 font-medium mt-0.5" style={{ fontFamily: 'var(--font-body)' }}>By: Ashu</span>
+              </span>
             </Link>
             <div className="flex items-center text-sm">
               <UserNav />
