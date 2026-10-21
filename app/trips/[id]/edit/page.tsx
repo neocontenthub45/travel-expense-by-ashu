@@ -36,12 +36,13 @@ export default function EditTripPage({ params }: { params: Promise<{ id: string 
 
     try {
       const formData = new FormData(e.currentTarget);
-      const payload = {
+        const payload = {
         trip_name: formData.get("trip_name") as string,
         start_date: formData.get("start_date") as string,
         end_date: (formData.get("end_date") as string) || null,
         country: (formData.get("country") as string) || null,
         currency: formData.get("currency") as string,
+        claim_status: formData.get("claim_status") as string,
       };
 
       const { error } = await supabase.from("trips").update(payload).eq("id", id);
@@ -93,6 +94,14 @@ export default function EditTripPage({ params }: { params: Promise<{ id: string 
                 <option value="AED">AED</option>
               </select>
             </div>
+          </div>
+            <div>
+            <label className="block text-sm font-medium text-slate-700 mb-1">Trip Status</label>
+            <select name="claim_status" defaultValue={trip.claim_status} className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-600">
+              <option value="ongoing">Ongoing (Active)</option>
+              <option value="closed">Closed (Pending Claim)</option>
+              <option value="claimed">Claimed (Settled)</option>
+            </select>
           </div>
           {error && <div className="p-3 bg-rose-50 text-rose-700 text-sm rounded-lg">{error}</div>}
           <button type="submit" disabled={saving} className="w-full flex items-center justify-center gap-2 bg-indigo-600 text-white py-2.5 rounded-lg text-sm font-medium hover:bg-indigo-700 mt-2">

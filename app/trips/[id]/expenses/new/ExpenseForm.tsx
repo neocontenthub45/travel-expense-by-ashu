@@ -55,6 +55,7 @@ export default function ExpenseForm({ trip }: { trip: Trip }) {
         notes: (formData.get("notes") as string) || null,
         receipt_url: receiptPath,
         file_size: fileSize,
+        claim_status: "pending",
       };
 
       const { error: insertError } = await supabase.from("expenses").insert(payload);

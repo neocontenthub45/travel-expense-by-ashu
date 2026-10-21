@@ -90,12 +90,14 @@ const supabase = await createClient();
 
       <div className="flex items-center justify-between">
         <h2 className="text-lg font-semibold text-slate-900">Expenses</h2>
-        <Link
-          href={`/trips/${t.id}/expenses/new`}
-          className="bg-black text-white px-4 py-2 rounded-md text-sm hover:bg-gray-800"
-        >
-          + Add Expense
-        </Link>
+        {t.claim_status === "ongoing" && (
+  <Link
+    href={`/trips/${t.id}/expenses/new`}
+    className="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700"
+  >
+    + Add Expense
+  </Link>
+)}
       </div>
 
       {list.length === 0 ? (

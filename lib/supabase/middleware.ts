@@ -46,13 +46,15 @@ export async function updateSession(request: NextRequest) {
   }
 
   // Agar user logged in hai aur login/signup page pe jane ki koshish kar raha hai
+    // Agar user logged in hai aur login/signup ya landing page pe jane ki koshish kar raha hai
   if (
     user &&
     (request.nextUrl.pathname.startsWith("/login") ||
-      request.nextUrl.pathname.startsWith("/signup"))
+      request.nextUrl.pathname.startsWith("/signup") ||
+      request.nextUrl.pathname === "/")
   ) {
     const url = request.nextUrl.clone();
-    url.pathname = "/";
+    url.pathname = "/dashboard";
     return NextResponse.redirect(url);
   }
 

@@ -5,7 +5,7 @@ export type Trip = {
   end_date: string | null
   country: string | null
   currency: string
-  claim_status: 'ongoing' | 'claimed' | 'closed'
+  claim_status: 'ongoing' | 'closed' | 'claimed'
   created_at: string
 }
 
