@@ -6,6 +6,7 @@ import { createClient } from "@/lib/supabase/client";
 import { uploadReceipt } from "@/lib/storage";
 import type { Trip } from "@/lib/types";
 import { Loader2, Camera, Paperclip } from "lucide-react";
+import BackButton from "@/components/BackButton";
 import { showToast } from "@/lib/toast";
 
 const CATEGORIES = ["Food", "Taxi", "Hotel", "Flight", "Train", "Bus", "Fuel", "Shopping", "Other"];
@@ -79,7 +80,8 @@ export default function ExpenseForm({ trip }: { trip: Trip }) {
 
   return (
     <div className="max-w-md mx-auto">
-      <h1 className="text-2xl font-bold text-slate-900 mb-1">Add Expense</h1>
+            <BackButton label="Cancel" className="mb-4" />
+      <h1 className="text-2xl font-bold text-slate-900 mb-1" style={{ fontFamily: 'var(--font-display)' }}>Add Expense</h1>
       <p className="text-sm text-slate-600 mb-6">{trip.trip_name} · {trip.currency}</p>
 
         <form ref={formRef} onSubmit={handleSubmit} className="space-y-4 bg-white p-6 rounded-xl border border-slate-200 shadow-sm">

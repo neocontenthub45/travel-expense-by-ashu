@@ -43,14 +43,31 @@ export default function TripDetailPage({ params }: { params: Promise<{ id: strin
 
   if (loading) {
     return (
-      <div className="flex flex-col items-center justify-center py-32 space-y-4">
-        <Loader2 className="w-8 h-8 animate-spin text-indigo-600" />
+      <div className="max-w-5xl mx-auto space-y-6 animate-pulse">
+        <div className="h-8 w-24 bg-slate-200 rounded-full" />
+        <div className="bg-white p-6 rounded-2xl border border-slate-200">
+          <div className="h-8 w-64 bg-slate-200 rounded-lg mb-4" />
+          <div className="flex gap-4">
+            <div className="h-4 w-24 bg-slate-100 rounded" />
+            <div className="h-4 w-24 bg-slate-100 rounded" />
+          </div>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+          <div className="h-24 bg-slate-200 rounded-2xl" />
+          <div className="h-24 bg-slate-200 rounded-2xl" />
+          <div className="h-24 bg-slate-200 rounded-2xl" />
+        </div>
+        <div className="h-16 bg-slate-200 rounded-xl" />
+        <div className="space-y-3">
+          <div className="h-24 bg-slate-200 rounded-xl" />
+          <div className="h-24 bg-slate-200 rounded-xl" />
+        </div>
       </div>
     );
   }
 
   if (error || !trip) {
-    return <div className="p-10 text-center text-rose-600">Trip not found.</div>;
+    notFound(); // Yeh Next.js ke not-found.tsx page pe bhej dega
   }
 
   const total = expenses.reduce((s, e) => s + Number(e.amount), 0);
