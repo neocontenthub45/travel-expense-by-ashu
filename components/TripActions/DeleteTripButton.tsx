@@ -24,7 +24,7 @@ export default function DeleteTripButton({ tripId, tripName }: { tripId: string,
       // 1. Pehle expenses ki receipt_url nikaalo taaki storage se delete kar sakein
       const { data: expenses } = await supabase.from("expenses").select("receipt_url").eq("trip_id", tripId);
       
-      const paths = (expenses || []).filter(e => e.receipt_url).map(e => e.receipt_url);
+      const paths = (expenses || []).filter((e: { receipt_url: string | null }) => e.receipt_url).map((e: { receipt_url: string | null }) => e.receipt_url as string);
       
       // 2. Storage se bills delete karo
       if (paths.length > 0) {
