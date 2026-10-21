@@ -1,6 +1,6 @@
 {
   "name": "Travel Expense Tracker",
-  "short_name": "TravelExpense",
+  "short_name": "✈️-Expense",
   "description": "Track business trips, bills, and claims effortlessly.",
   "start_url": "/",
   "display": "standalone",
