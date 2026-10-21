@@ -31,7 +31,7 @@ export default function ClaimExportSection({ trip, expenses }: { trip: Trip, exp
     } catch (err: any) { showToast(err.message, "error"); } finally { setLoading(false); }
   }
 
-  async function handleTripStatus(newStatus: string, expenseStatus: string) {
+    async function handleTripStatus(newStatus: string, expenseStatus: string | null) {
     if (!confirm(`Are you sure you want to mark this trip as ${newStatus}?`)) return;
     setLoading(true); setAction(newStatus);
     try {
