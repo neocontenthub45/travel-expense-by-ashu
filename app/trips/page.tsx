@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Receipt, Plane } from "lucide-react";
-import { supabase } from "@/lib/supabase";
+import { createClient } from "@/lib/supabase/server";
 import type { Trip } from "@/lib/types";
 import PageTransition from "@/components/PageTransition";
 import EmptyState from "@/components/EmptyState";
@@ -9,6 +9,7 @@ export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
 export default async function TripsPage() {
+  const supabase = await createClient();
   const { data: trips, error } = await supabase
     .from("trips")
     .select("*")

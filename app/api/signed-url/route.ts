@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
-import { supabase } from "@/lib/supabase";
+import { createClient } from "@/lib/supabase/server";
 
 export async function POST(req: NextRequest) {
-  const { path } = await req.json();
+  const supabase = await createClient();
+const { path } = await req.json();
   if (!path) {
     return NextResponse.json({ error: "path required" }, { status: 400 });
   }

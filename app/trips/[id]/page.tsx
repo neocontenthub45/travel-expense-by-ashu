@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { supabase } from "@/lib/supabase";
+import { createClient } from "@/lib/supabase/server";
 import type { Trip, Expense } from "@/lib/types";
 import ViewBillButton from "@/components/ViewBillButton";
 
@@ -10,7 +10,8 @@ export default async function TripDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-
+const supabase = await createClient();
+  
   const { data: trip } = await supabase
     .from("trips")
     .select("*")
