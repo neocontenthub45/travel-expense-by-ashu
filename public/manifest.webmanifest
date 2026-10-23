@@ -2,7 +2,7 @@
   "name": "Travel Expense Tracker",
   "short_name": "✈️-Expense",
   "description": "Track business trips, bills, and claims effortlessly.",
-  "start_url": "/",
+  "start_url": "/dashboard",
   "display": "standalone",
   "background_color": "#F8F6F0",
   "theme_color": "#4F46E5",
