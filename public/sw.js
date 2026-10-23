@@ -1,8 +1,7 @@
-const CACHE_NAME = 'travel-expense-v2';
+const CACHE_NAME = 'travel-expense-v4';
 const PRECACHE = ['/icon-192x192.png', '/icon-512x512.png'];
 
 self.addEventListener('install', (e) => {
-  // ek file fail ho to bhi install fail na ho
   e.waitUntil(
     caches.open(CACHE_NAME).then((c) =>
       Promise.allSettled(PRECACHE.map((u) => c.add(u)))
@@ -23,11 +22,16 @@ self.addEventListener('activate', (e) => {
 self.addEventListener('fetch', (e) => {
   const req = e.request;
   const url = new URL(req.url);
+
+  // 1. Sirf GET requests handle karo
   if (req.method !== 'GET') return;
+
+  // 2. Supabase API calls ko BILKUL CACHE MAT KARO (Yeh sabse important hai)
   if (url.origin !== self.location.origin) return;
   if (url.pathname.startsWith('/api/')) return;
+  if (url.pathname.startsWith('/_next/')) return; // Next.js internal requests
 
-  // network-first, offline par cache se
+  // 3. Baaki static assets ko network-first try karo
   e.respondWith(
     fetch(req)
       .then((res) => {
