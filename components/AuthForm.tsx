@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import Link from "next/link"; // <--- YEH IMPORT ZAROORI HAI
+import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import { Mail, Lock, Loader2, ArrowRight } from "lucide-react";
 import { showToast } from "@/lib/toast";
@@ -74,7 +74,7 @@ export default function AuthForm({ mode }: { mode: "login" | "signup" }) {
 
         {/* Boarding Pass Card */}
         <div
-          className="flex flex-col rounded-[20px] bg-[#FFFBF4] text-[#17163F] shadow-[0_18px_40px_-12px_rgba(90,40,150,0.5)]"
+          className="flex flex-col rounded-[20px] bg-[#FFFBF4] text-[#17163F] shadow-[0_18px_40px_-12px_rgba(90,40,150,0.5)] pb-2"
           style={{ WebkitMask: notchMask, mask: notchMask }}
         >
           <form onSubmit={handleSubmit} className="px-5 pt-6 pb-2 space-y-4">
@@ -109,15 +109,6 @@ export default function AuthForm({ mode }: { mode: "login" | "signup" }) {
               </div>
             </div>
 
-            {/* FORGOT PASSWORD LINK */}
- {isLogin && (
-  <div className="flex justify-end mt-2">
-    <<a href="/forgot-password" className="text-xs font-semibold text-indigo-600 hover:underline">
-  Forgot Password?
-</a>
-  </div>
-)}
-
             {error && (
               <div className="p-2.5 bg-rose-50 text-rose-700 text-xs rounded-lg border border-rose-200">
                 {error}
@@ -137,6 +128,15 @@ export default function AuthForm({ mode }: { mode: "login" | "signup" }) {
               </button>
             </div>
           </form>
+
+          {/* Yahan hai Forgot Password link, Form ke bahar */}
+          {isLogin && (
+            <div className="text-center pb-4 px-5">
+              <a href="/forgot-password" className="text-xs font-semibold text-indigo-600 hover:underline">
+                Forgot Password?
+              </a>
+            </div>
+          )}
         </div>
 
         {/* Footer Links */}
