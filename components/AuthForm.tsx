@@ -112,7 +112,10 @@ export default function AuthForm({ mode }: { mode: "login" | "signup" }) {
             {/* FORGOT PASSWORD LINK */}
             {isLogin && (
               <div className="flex justify-end -mt-2 pb-2">
-                <Link href="/forgot-password" className="text-xs font-semibold text-indigo-600 hover:underline">
+                <Link 
+                  href="/forgot-password" 
+                  className="text-xs font-semibold text-indigo-600 hover:underline block z-10 relative"
+                >
                   Forgot Password?
                 </Link>
               </div>
