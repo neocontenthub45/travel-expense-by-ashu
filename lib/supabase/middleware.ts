@@ -9,8 +9,8 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // 2. Public routes
-  if (path === "/" || path.startsWith("/login") || path.startsWith("/signup")) {
+    // 2. Public routes
+  if (path === "/" || path.startsWith("/login") || path.startsWith("/signup") || path.startsWith("/reset-password")) {
     return NextResponse.next();
   }
 
