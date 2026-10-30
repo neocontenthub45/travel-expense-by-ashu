@@ -129,16 +129,15 @@ export default function AuthForm({ mode }: { mode: "login" | "signup" }) {
             </div>
           </form>
 
-          {/* Force Redirect Button */}
+                    {/* Force Redirect Button */}
           {isLogin && (
             <div className="text-center pb-4 px-5">
-              <button 
-                type="button"
-                onClick={() => router.push("/forgot-password")} 
-                className="text-xs font-semibold text-indigo-600 hover:underline p-2"
+              <a 
+                href="/forgot-password" 
+                className="text-xs font-semibold text-indigo-600 hover:underline p-2 inline-block"
               >
                 Forgot Password?
-              </button>
+              </a>
             </div>
           )}
         </div>
