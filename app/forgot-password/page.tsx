@@ -18,7 +18,7 @@ export default function ForgotPasswordPage() {
 
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
       // User reset link pe click karega toh yahan aayega
-      redirectTo: `${window.location.origin}/reset-password`,
+      redirectTo: "https://travel-expense-by-ashu.vercel.app/reset-password",
     });
 
     if (error) {
