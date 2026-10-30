@@ -57,8 +57,8 @@ export default function AuthForm({ mode }: { mode: "login" | "signup" }) {
   async function handleForgotPassword(e: React.FormEvent) {
     e.preventDefault();
     setResetLoading(true);
-    const { error } = await supabase.auth.resetPasswordForEmail(resetEmail, {
-      redirectTo: "https://travel-expense-by-ashu.vercel.app/reset-password",
+      const { error } = await supabase.auth.resetPasswordForEmail(resetEmail, {
+      redirectTo: `${window.location.origin}/reset-password`,
     });
     if (error) showToast(error.message, "error");
     else {
