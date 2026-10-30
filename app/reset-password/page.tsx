@@ -1,16 +1,36 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useEffect, Suspense } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
-import { Lock, Loader2 } from "lucide-react";
+import { Lock, Loader2, CheckCircle2 } from "lucide-react";
 import { showToast } from "@/lib/toast";
+import Link from "next/link";
 
-export default function ResetPasswordPage() {
+function ResetForm() {
   const router = useRouter();
   const supabase = createClient();
+  const searchParams = useSearchParams();
   const [loading, setLoading] = useState(false);
+  const [verifying, setVerifying] = useState(true);
   const [password, setPassword] = useState("");
+  const [success, setSuccess] = useState(false);
+
+  useEffect(() => {
+    // Supabase PKCE flow: Link mein ek 'code' hota hai jise exchange karna padta hai
+    async function verifyCode() {
+      const code = searchParams.get("code");
+      if (code) {
+        const { error } = await supabase.auth.exchangeCodeForSession(code);
+        if (error) {
+          showToast("Invalid or expired link.", "error");
+          router.push("/login");
+        }
+      }
+      setVerifying(false);
+    }
+    verifyCode();
+  }, [searchParams, supabase, router]);
 
   async function handleUpdate(e: React.FormEvent) {
     e.preventDefault();
@@ -20,11 +40,31 @@ export default function ResetPasswordPage() {
 
     if (error) {
       showToast(error.message, "error");
-      setLoading(false);
     } else {
+      setSuccess(true);
       showToast("Password updated successfully!", "success");
-      router.push("/dashboard");
+      setTimeout(() => router.push("/dashboard"), 2000);
     }
+    setLoading(false);
+  }
+
+  if (verifying) {
+    return (
+      <div className="min-h-[80vh] flex flex-col items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin text-indigo-600 mb-4" />
+        <p className="text-slate-500">Verifying reset link...</p>
+      </div>
+    );
+  }
+
+  if (success) {
+    return (
+      <div className="min-h-[80vh] flex flex-col items-center justify-center px-4 text-center">
+        <CheckCircle2 className="w-16 h-16 text-emerald-500 mb-4" />
+        <h1 className="text-2xl font-bold text-slate-900 mb-2">Password Updated!</h1>
+        <p className="text-slate-500 mb-6">Redirecting you to the dashboard...</p>
+      </div>
+    );
   }
 
   return (
@@ -64,5 +104,13 @@ export default function ResetPasswordPage() {
         </form>
       </div>
     </div>
+  );
+}
+
+export default function ResetPasswordPage() {
+  return (
+    <Suspense fallback={<div className="flex justify-center py-20"><Loader2 className="w-6 h-6 animate-spin text-indigo-600" /></div>}>
+      <ResetForm />
+    </Suspense>
   );
 }
